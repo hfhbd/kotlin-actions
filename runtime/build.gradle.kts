@@ -9,7 +9,7 @@ kotlin {
 }
 
 dependencies {
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
     api(npm("@actions/github", "6.0.0"))
     api(npm("@actions/core", "1.10.1"))
 
