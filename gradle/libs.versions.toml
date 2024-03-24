@@ -1,0 +1,8 @@
+[libraries]
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.2" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version = "1.16.0" }
+
+[plugins]
+kotlin-js = { id = "org.jetbrains.kotlin.js", version = "2.0.0-Beta5" }
+kotlin-jsplain-objects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version = "2.0.0-Beta5" }
+publish = { id = "io.github.gradle-nexus.publish-plugin", version = "1.3.0" }
