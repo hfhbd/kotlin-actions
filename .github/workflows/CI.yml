@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
+      contents: read
 
     env:
       GRADLE_OPTS: -Dorg.gradle.caching=true
