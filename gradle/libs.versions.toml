@@ -1,5 +1,5 @@
 [libraries]
-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.2" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.3" }
 kotlinpoet = { module = "com.squareup:kotlinpoet", version = "1.16.0" }
 
 [plugins]
