@@ -25,3 +25,19 @@ sourceSets.main {
 tasks.validatePlugins {
     enableStricterValidation.set(true)
 }
+
+gradlePlugin.plugins.configureEach {
+    displayName = "Gradle plugin to generate Kotlin entrypoints for GitHub actions.yml"
+    description = "Gradle plugin to generate Kotlin entrypoints for GitHub actions.yml"
+}
+
+configurations.configureEach {
+    if (isCanBeConsumed) {
+        attributes {
+            attribute(
+                GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+                objects.named(GradleVersion.version("8.7").version)
+            )
+        }
+    }
+}
