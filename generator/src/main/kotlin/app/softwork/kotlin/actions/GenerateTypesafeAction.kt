@@ -24,6 +24,21 @@ private val core = MemberName("com.github.actions", "core", isExtension = true)
 
 internal fun ActionYml.generateCode(): FileSpec {
     val builder = FileSpec.builder("", "action")
+
+    val outputClass = if (outputs != null) {
+        TypeSpec.classBuilder("Outputs").apply {
+            addModifiers(KModifier.DATA)
+            val constructor = FunSpec.constructorBuilder()
+            for ((name, output) in outputs) {
+                addProperty(
+                    PropertySpec.builder(name.toCamelCase(), STRING).addKdoc(output.description).initializer(name.toCamelCase()).build()
+                )
+                constructor.addParameter(name.toCamelCase(), STRING)
+            }
+            primaryConstructor(constructor.build())
+        }.build()
+    } else null
+
     builder.addFunction(FunSpec.builder("main").apply {
         addModifiers(KModifier.SUSPEND)
 
@@ -33,17 +48,10 @@ internal fun ActionYml.generateCode(): FileSpec {
             for ((name, input) in inputs) {
                 val kotlinName = name.toCamelCase()
                 val options = if (input.required) {
-                    CodeBlock.builder()
-                        .beginControlFlow("")
-                        .add("  required = true\n")
-                        .unindent()
-                        .add("  }")
-                        .build()
+                    CodeBlock.builder().beginControlFlow("").add("  required = true\n").unindent().add("  }").build()
                 } else CodeBlock.of("")
                 functionInputs.add(
-                    "\n  %L = %M.getInput(%S)%L,", nameAllocator.newName(kotlinName),
-                    core,
-                    name, options
+                    "\n  %L = %M.getInput(%S)%L,", nameAllocator.newName(kotlinName), core, name, options
                 )
             }
         }
@@ -55,7 +63,7 @@ internal fun ActionYml.generateCode(): FileSpec {
             }
             addCode(")\n")
         } else {
-            addCode("val outputs = action(%L", functionInputs.build())
+            addCode("val outputs: %N = action(%L", outputClass!!, functionInputs.build())
             if (inputs != null) {
                 addCode("\n")
             }
@@ -64,14 +72,14 @@ internal fun ActionYml.generateCode(): FileSpec {
             for ((name) in outputs) {
                 val kotlinName = name.toCamelCase()
                 addStatement(
-                    "%M.setOutput(%S, outputs.%M)",
-                    core,
-                    name,
-                    MemberName("", outputNames.newName(kotlinName))
+                    "%M.setOutput(%S, outputs.%L)", core, name, outputNames.newName(name.toCamelCase())
                 )
                 addCode("\n")
             }
         }
     }.build())
+    if (outputClass != null) {
+        builder.addType(outputClass)
+    }
     return builder.build()
 }

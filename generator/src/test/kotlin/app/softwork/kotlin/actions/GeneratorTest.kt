@@ -25,16 +25,24 @@ class GeneratorTest {
         assertEquals(
             """
                 import com.github.actions.core
+                import kotlin.String
                 
                 public suspend fun main() {
-                  val outputs = action(
+                  val outputs: Outputs = action(
                     whoToGreet = core.getInput("who-to-greet") {
                       required = true
                     },
                   )
-                  core.setOutput("time", outputs.time)
+                  core.setOutput("ti-me", outputs.tiMe)
                 
                 }
+                
+                public data class Outputs(
+                  /**
+                   * The time we greeted you
+                   */
+                  public val tiMe: String,
+                )
 
             """.trimIndent(),
             file.generateCode().toString(),
