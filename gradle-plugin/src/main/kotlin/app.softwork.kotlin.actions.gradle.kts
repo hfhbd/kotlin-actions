@@ -1,6 +1,7 @@
 import app.softwork.kotlin.actions.*
 import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.targets.js.ir.*
+import org.jetbrains.kotlin.gradle.targets.js.webpack.*
 
 plugins {
     kotlin("multiplatform")
@@ -19,10 +20,14 @@ val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class) {
     })
 }
 
-val actionFile = providers.of(ActionYmlSource::class.java) {
+val actionFile = providers.of(ActionYmlSource::class) {
     parameters {
         actionFile.set(layout.projectDirectory.file("action.yml"))
     }
+}
+
+val customWebpackConfig = tasks.register("createCustomWebpackConfig", CreateCustomWebpackConfig::class) {
+    nodeVersion.set(actionFile.map { it.runs.using.version.dropLastWhile { it != '.' }.dropLast(1) })
 }
 
 kotlin {
@@ -48,6 +53,34 @@ kotlin {
                 sourceMap.set(false)
                 sourceMapEmbedSources.set(JsSourceMapEmbedMode.SOURCE_MAP_SOURCE_CONTENT_NEVER)
             }
+
+            val executable = tasks.register(
+                "${name}Executable",
+                KotlinWebpack::class,
+                compilations.getByName("main"),
+                project.objects
+            )
+            val sync = tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
+            executable.configure {
+                dependsOn(customWebpackConfig, sync)
+                mode = KotlinWebpackConfig.Mode.PRODUCTION
+                inputFilesDirectory.set(layout.dir(sync.flatMap { it.destinationDirectory }))
+                entryModuleName.set(project.name + "-$name")
+                esModules.set(true)
+                outputDirectory.set(dir)
+                output.globalObject = "this"
+                mainOutputFileName.set(fileName)
+                webpackConfigApplier {
+                    configDirectory = customWebpackConfig.flatMap { it.outputDir.asFile }.get()
+                }
+            }
+            customWebpackConfig {
+                entry.set(executable.flatMap { it.entry })
+            }
+
+            tasks.assemble {
+                dependsOn(executable)
+            }
         }
         sourceSets {
             named("${name}Main") {
@@ -58,25 +91,6 @@ kotlin {
                     implementation("app.softwork.kotlin.actions:runtime:$VERSION")
                 }
             }
-        }
-        val copyDist = tasks.register("copy${name}Dist", Copy::class) {
-            from(
-                tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
-                    .flatMap { it.destinationDirectory }) {
-                exclude {
-                    it.name.endsWith(".map")
-                }
-                rename {
-                    if (it == "${project.name}-main.mjs") {
-                        fileName.get()
-                    } else it
-                }
-            }
-            into(dir)
-        }
-
-        tasks.assemble {
-            dependsOn(copyDist)
         }
     }
 
