@@ -1,13 +1,23 @@
-import app.softwork.typesafe.github.actions.*
-import kotlinx.serialization.json.*
+import app.softwork.kotlin.actions.*
 import org.jetbrains.kotlin.gradle.targets.js.ir.*
 
 plugins {
-    kotlin("js")
+    kotlin("multiplatform")
     kotlin("plugin.js-plain-objects")
 }
 
-val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class)
+val workerActionDeps = configurations.dependencyScope("kotlinActions")
+val workerActionClasspath = configurations.resolvable("kotlinActionsWorkerClasspath") {
+    extendsFrom(workerActionDeps.get())
+}
+
+dependencies {
+    workerActionDeps("app.softwork.kotlin.actions:generator:$VERSION")
+}
+
+val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class) {
+    this.workerClasspath.from(workerActionClasspath)
+}
 
 kotlin {
     js {
@@ -15,7 +25,7 @@ kotlin {
         nodejs()
     }
     sourceSets {
-        named("main") {
+        named("jsMain") {
             kotlin.srcDirs(generateTypesafeAction)
             dependencies {
                 implementation("app.softwork.kotlin.actions:runtime:$VERSION")
@@ -25,16 +35,14 @@ kotlin {
 }
 
 rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-    val json = Json {
-        ignoreUnknownKeys = true
-    }
-    version = providers.fileContents(layout.projectDirectory.file("action.yml")).asText.map {
-        json.decodeFromString<ActionYml>(it).runs.using.version
-    }.get()
+// TODO: read the value from actions.yml
+    version = "20.11.0"
 }
 
 val copyDist by tasks.registering(Copy::class) {
-    from(tasks.named("productionExecutableCompileSync", DefaultIncrementalSyncTask::class).flatMap { it.destinationDirectory })
+    from(
+        tasks.named("jsProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
+            .flatMap { it.destinationDirectory })
     into(layout.projectDirectory.dir("dist"))
 }
 

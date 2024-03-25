@@ -1,13 +1,13 @@
 plugins {
     `kotlin-dsl`
-    kotlin("plugin.serialization") version embeddedKotlinVersion
 }
 
 dependencies {
-    implementation(libs.serialization.json)
-    implementation(libs.kotlinpoet)
-    implementation(libs.plugins.kotlin.js.toDep())
-    implementation(libs.plugins.kotlin.jsplain.objects.toDep())
+    compileOnly(projects.generator)
+    implementation(libs.plugins.kotlin.multiplatform.toDep())
+    implementation(libs.plugins.kotlin.js.plain.objects.toDep())
+
+    testImplementation(kotlin("test"))
 }
 
 fun Provider<PluginDependency>.toDep() = map {

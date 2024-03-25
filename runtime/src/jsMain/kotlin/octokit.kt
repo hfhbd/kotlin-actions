@@ -1,5 +1,7 @@
 @file:JsModule("@octokit")
 
+package com.github.actions
+
 external interface Octokit {
     val rest: Rest
 }
