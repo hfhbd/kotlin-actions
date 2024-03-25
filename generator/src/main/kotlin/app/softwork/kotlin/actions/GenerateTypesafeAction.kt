@@ -50,9 +50,13 @@ internal fun ActionYml.generateCode(): FileSpec {
 
         if (outputs == null) {
             addCode("action(%L", functionInputs.build())
+            if (inputs != null) {
+                addCode("\n")
+            }
+            addCode(")\n")
         } else {
             addCode("val outputs = action(%L", functionInputs.build())
-            if(inputs != null) {
+            if (inputs != null) {
                 addCode("\n")
             }
             addCode(")\n")
