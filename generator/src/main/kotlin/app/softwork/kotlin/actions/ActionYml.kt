@@ -1,3 +1,5 @@
+package app.softwork.kotlin.actions
+
 import kotlinx.serialization.*
 
 @Serializable

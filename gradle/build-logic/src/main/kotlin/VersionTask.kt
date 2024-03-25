@@ -28,7 +28,7 @@ abstract class VersionTask : DefaultTask() {
             }
         }.writeText(
             """
-            |package app.softwork.typesafe.github.actions
+            |package app.softwork.kotlin.actions
             |
             |internal val VERSION: String = "${version.get()}"
             |

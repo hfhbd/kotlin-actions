@@ -1,43 +1,22 @@
+package app.softwork.kotlin.actions
+
 import com.squareup.kotlinpoet.*
 import kotlinx.serialization.json.*
-import org.gradle.api.*
-import org.gradle.api.file.*
-import org.gradle.api.tasks.*
-
-@CacheableTask
-abstract class GenerateTypesafeAction : DefaultTask() {
-    @get:InputFile
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val actionFile: RegularFileProperty
-
-    @get:OutputDirectory
-    abstract val outputDirectory: DirectoryProperty
-
-    init {
-        actionFile.convention(project.layout.projectDirectory.file("action.yml"))
-        outputDirectory.convention(project.layout.buildDirectory.dir("actions/generated"))
-    }
-
-    private companion object {
-        val json = Json {
-            ignoreUnknownKeys = true
-        }
-    }
-
-    @TaskAction
-    fun generate() {
-        val actionFile = actionFile.get().asFile
-        val actionDefinition = json.decodeFromString<ActionYml>(actionFile.readText())
-
-        actionDefinition.generateCode().writeTo(outputDirectory.get().asFile)
-    }
-}
+import java.io.*
 
 private fun String.toCamelCase(): String = replace("-(.)".toRegex()) {
     it.groups[1]!!.value.replaceFirstChar { it.uppercaseChar() }
 }
 
-internal fun ActionYml.generateCode(): FileSpec {
+private val json = Json {
+    ignoreUnknownKeys = true
+}
+
+public fun File.generateCode(outputFile: File) {
+    json.decodeFromString<ActionYml>(readText()).generateCode().writeTo(outputFile)
+}
+
+public fun ActionYml.generateCode(): FileSpec {
     val builder = FileSpec.builder("", "action")
     builder.addFunction(FunSpec.builder("main").apply {
         addModifiers(KModifier.SUSPEND)
