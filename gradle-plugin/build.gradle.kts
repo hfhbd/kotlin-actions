@@ -2,6 +2,8 @@ plugins {
     `kotlin-dsl`
 }
 
+kotlin.jvmToolchain(8)
+
 dependencies {
     compileOnly(projects.generator)
     implementation(libs.plugins.kotlin.multiplatform.toDep())
