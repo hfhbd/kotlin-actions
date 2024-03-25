@@ -23,6 +23,7 @@ external interface Context {
     val serverUrl: String
     val graphqlUrl: String
     val repo: Repo
+    val token: String
 }
 
 external interface Repo {
