@@ -2,7 +2,6 @@ package app.softwork.kotlin.actions
 
 import org.gradle.api.file.*
 import org.gradle.api.provider.*
-import javax.inject.*
 
 abstract class ActionYmlSource : ValueSource<ActionYml, ActionYmlSource.Parameters> {
     interface Parameters : ValueSourceParameters {
