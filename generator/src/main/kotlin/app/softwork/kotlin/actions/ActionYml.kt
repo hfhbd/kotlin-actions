@@ -19,7 +19,7 @@ public data class Runs(
 
 // https://nodejs.org/en/about/previous-releases
 @Serializable
-public enum class Using(val version: String) {
+public enum class Using(public val version: String) {
     @SerialName("node12")
     Node12("12.22.12"),
 
