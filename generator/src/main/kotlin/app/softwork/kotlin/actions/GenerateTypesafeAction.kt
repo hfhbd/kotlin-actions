@@ -8,10 +8,6 @@ private fun String.toCamelCase(): String = replace("-(.)".toRegex()) {
     it.groups[1]!!.value.replaceFirstChar { it.uppercaseChar() }
 }
 
-private val json = Json {
-    ignoreUnknownKeys = true
-}
-
 public fun File.generateCode(outputFile: File) {
     bufferedReader().generateCode().writeTo(outputFile)
 }

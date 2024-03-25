@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization")
+    id("friendPath")
 }
 
 kotlin {
@@ -9,7 +9,8 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.serialization.json)
+    implementation(projects.actionJson)
+    friendPath(projects.actionJson)
     implementation(libs.kotlinpoet)
 
     testImplementation(kotlin("test"))

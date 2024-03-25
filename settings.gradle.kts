@@ -28,6 +28,7 @@ rootProject.name = "kotlin-actions"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 enableFeaturePreview("STABLE_CONFIGURATION_CACHE")
 
+include(":action-json")
 include(":generator")
 include(":gradle-plugin")
 include(":runtime")
