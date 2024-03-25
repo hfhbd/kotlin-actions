@@ -3,7 +3,7 @@ package app.softwork.kotlin.actions
 import kotlinx.serialization.*
 
 @Serializable
-data class ActionYml(
+public data class ActionYml(
     val name: String,
     val description: String,
     val inputs: Map<String, Input>? = null,
@@ -12,14 +12,14 @@ data class ActionYml(
 )
 
 @Serializable
-data class Runs(
+public data class Runs(
     val using: Using,
     val main: String,
 )
 
 // https://nodejs.org/en/about/previous-releases
 @Serializable
-enum class Using(val version: String) {
+public enum class Using(public val version: String) {
     @SerialName("node12")
     Node12("12.22.12"),
 
@@ -31,13 +31,13 @@ enum class Using(val version: String) {
 }
 
 @Serializable
-data class Input(
+public data class Input(
     val description: String,
     val required: Boolean,
     val default: String? = null,
 )
 
 @Serializable
-data class Output(
+public data class Output(
     val description: String,
 )

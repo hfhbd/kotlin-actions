@@ -35,7 +35,7 @@ kotlin {
 }
 
 rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-// TODO: read the value from actions.yml
+    // TODO: read the value from actions.yml
     version = "20.11.0"
 }
 
@@ -43,6 +43,7 @@ val copyDist by tasks.registering(Copy::class) {
     from(
         tasks.named("jsProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
             .flatMap { it.destinationDirectory })
+    // TODO: read the output dir from actions.yml
     into(layout.projectDirectory.dir("dist"))
 }
 
