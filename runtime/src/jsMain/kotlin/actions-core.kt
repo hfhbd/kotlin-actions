@@ -1,3 +1,5 @@
+package com.github.actions
+
 @JsModule("@actions/core")
 @JsNonModule
 external val core: Core

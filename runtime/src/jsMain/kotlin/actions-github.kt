@@ -1,3 +1,5 @@
+package com.github.actions
+
 @JsModule("@actions/github")
 @JsNonModule
 external val github: GitHub

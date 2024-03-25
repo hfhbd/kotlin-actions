@@ -13,10 +13,16 @@ private val json = Json {
 }
 
 public fun File.generateCode(outputFile: File) {
-    json.decodeFromString<ActionYml>(readText()).generateCode().writeTo(outputFile)
+    bufferedReader().generateCode().writeTo(outputFile)
 }
 
-public fun ActionYml.generateCode(): FileSpec {
+internal fun BufferedReader.generateCode(): FileSpec {
+    return json.decodeFromString<ActionYml>(readText()).generateCode()
+}
+
+private val core = MemberName("com.github.actions", "core", isExtension = true)
+
+internal fun ActionYml.generateCode(): FileSpec {
     val builder = FileSpec.builder("", "action")
     builder.addFunction(FunSpec.builder("main").apply {
         addModifiers(KModifier.SUSPEND)
@@ -29,25 +35,39 @@ public fun ActionYml.generateCode(): FileSpec {
                 val options = if (input.required) {
                     CodeBlock.builder()
                         .beginControlFlow("")
-                        .add("required = true\n")
+                        .add("  required = true\n")
                         .unindent()
-                        .add("}")
+                        .add("  }")
                         .build()
                 } else CodeBlock.of("")
-                functionInputs.add("\n%L = core.getInput(%S)%L,", nameAllocator.newName(kotlinName), name, options)
+                functionInputs.add(
+                    "\n  %L = %M.getInput(%S)%L,", nameAllocator.newName(kotlinName),
+                    core,
+                    name, options
+                )
             }
         }
 
-        addCode("val outputs = action(%L", functionInputs.build())
-        if (outputs != null) {
+        if (outputs == null) {
+            addCode("action(%L", functionInputs.build())
+        } else {
+            addCode("val outputs = action(%L", functionInputs.build())
+            if(inputs != null) {
+                addCode("\n")
+            }
+            addCode(")\n")
             val outputNames = NameAllocator()
             for ((name) in outputs) {
                 val kotlinName = name.toCamelCase()
-                addStatement("core.setOutput(%S, outputs.%M)", name, MemberName("", outputNames.newName(kotlinName)))
+                addStatement(
+                    "%M.setOutput(%S, outputs.%M)",
+                    core,
+                    name,
+                    MemberName("", outputNames.newName(kotlinName))
+                )
                 addCode("\n")
             }
         }
-        addCode(")")
     }.build())
     return builder.build()
 }
