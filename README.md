@@ -7,11 +7,15 @@ Write GitHub actions in Kotlin.
 This package is uploaded to `mavenCentral`.
 
 ````kotlin
-repositories {
-    mavenCentral()
+// settings.gradle.kts
+pluginManagement {
+    repositories {
+        mavenCentral()
+    }
 }
 
-dependencies {
-    implementation("app.softwork:kotlinx-uuid-core:LATEST")
+// build.gradle.kts
+plugins {
+    id("app.softwork.kotlin.actions") version "LATEST"
 }
 ````
