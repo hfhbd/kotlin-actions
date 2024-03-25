@@ -77,7 +77,7 @@ public data class Branding(
         Red,
 
         @SerialName("purple")
-        purple,
+        Purple,
 
         @SerialName("gray-dark")
         GrayDark,
