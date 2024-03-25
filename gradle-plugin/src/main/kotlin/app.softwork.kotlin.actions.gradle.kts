@@ -19,7 +19,11 @@ val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class) {
     this.workerClasspath.from(workerActionClasspath)
 }
 
-val actionFile = providers.of(ActionYmlSource::class.java) {}
+val actionFile = providers.of(ActionYmlSource::class.java) {
+    parameters {
+        actionFile.set(layout.projectDirectory.file("action.yml"))
+    }
+}
 
 kotlin {
     fun setUpTarget(
@@ -27,6 +31,8 @@ kotlin {
         dependsOn: Boolean,
         file: Provider<String>,
     ) {
+        val dir = file.map { it.dropLastWhile { it != '/' } }
+        val fileName = file.map { it.takeLastWhile { it != '/' } }
         js(name) {
             binaries.executable()
             nodejs()
@@ -44,8 +50,13 @@ kotlin {
         val copyDist = tasks.register("copy${name}Dist", Copy::class) {
             from(
                 tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
-                    .flatMap { it.destinationDirectory })
-            into(layout.projectDirectory.dir(file))
+                    .flatMap { it.destinationDirectory }) {
+                include {
+                    it.name.endsWith("js")
+                }
+                rename { fileName.get() }
+            }
+            into(layout.projectDirectory.dir(dir))
         }
 
         tasks.assemble {
