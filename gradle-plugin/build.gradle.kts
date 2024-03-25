@@ -5,6 +5,7 @@ plugins {
 kotlin.jvmToolchain(8)
 
 dependencies {
+    implementation(projects.actionJson)
     compileOnly(projects.generator)
     implementation(libs.plugins.kotlin.multiplatform.toDep())
     implementation(libs.plugins.kotlin.js.plain.objects.toDep())

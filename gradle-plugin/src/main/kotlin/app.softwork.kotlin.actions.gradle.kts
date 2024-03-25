@@ -19,34 +19,65 @@ val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class) {
     this.workerClasspath.from(workerActionClasspath)
 }
 
-kotlin {
-    js {
-        binaries.executable()
-        nodejs()
+val actionFile = providers.of(ActionYmlSource::class.java) {
+    parameters {
+        actionFile.set(layout.projectDirectory.file("action.yml"))
     }
-    sourceSets {
-        named("jsMain") {
-            kotlin.srcDirs(generateTypesafeAction)
-            dependencies {
-                implementation("app.softwork.kotlin.actions:runtime:$VERSION")
+}
+
+kotlin {
+    fun setUpTarget(
+        name: String,
+        dependsOn: Boolean,
+        file: Provider<String>,
+    ) {
+        val dir = file.map { it.dropLastWhile { it != '/' } }
+        val fileName = file.map { it.takeLastWhile { it != '/' } }
+        js(name) {
+            binaries.executable()
+            nodejs()
+        }
+        sourceSets {
+            named("${name}Main") {
+                if (dependsOn) {
+                    kotlin.srcDirs(generateTypesafeAction)
+                }
+                dependencies {
+                    implementation("app.softwork.kotlin.actions:runtime:$VERSION")
+                }
             }
         }
+        val copyDist = tasks.register("copy${name}Dist", Copy::class) {
+            from(
+                tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
+                    .flatMap { it.destinationDirectory }) {
+                include {
+                    it.name.endsWith("js")
+                }
+                rename { fileName.get() }
+            }
+            into(layout.projectDirectory.dir(dir))
+        }
+
+        tasks.assemble {
+            dependsOn(copyDist)
+        }
+    }
+
+    setUpTarget("js", true, actionFile.map { it.runs.main })
+
+    val runs = actionFile.map { it.runs }
+    val pre: Provider<String> = runs.map { it.pre }
+    if (pre.isPresent) {
+        setUpTarget("pre", false, pre)
+    }
+    val post: Provider<String> = runs.map { it.post }
+    if (post.isPresent) {
+        setUpTarget("post", false, post)
     }
 }
 
 rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
-    // TODO: read the value from actions.yml
-    version = "20.11.0"
-}
-
-val copyDist by tasks.registering(Copy::class) {
-    from(
-        tasks.named("jsProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
-            .flatMap { it.destinationDirectory })
-    // TODO: read the output dir from actions.yml
-    into(layout.projectDirectory.dir("dist"))
-}
-
-tasks.assemble {
-    dependsOn(copyDist)
+    // https://youtrack.jetbrains.com/issue/KT-65639
+    version = actionFile.map { it.runs.using.version }.get()
 }
