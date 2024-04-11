@@ -8,11 +8,21 @@ external interface Octokit {
 
 external interface Rest {
     val repos: Repos
+    val users: Users
 }
 
 external interface Repos {
     suspend fun listReleases(owner: String, repo: String): Array<Release>
     suspend fun getLatestRelease(owner: String, repo: String): Release?
+}
+
+external interface Users {
+    suspend fun getAuthenticated(): User
+}
+
+external interface User {
+    val login: String
+    val name: String?
 }
 
 external interface Release {
