@@ -8,16 +8,15 @@ plugins {
 }
 
 val workerActionDeps = configurations.dependencyScope("kotlinActions")
-val workerActionClasspath = configurations.resolvable("kotlinActionsWorkerClasspath") {
-    extendsFrom(workerActionDeps.get())
-}
 
 dependencies {
     workerActionDeps("app.softwork.kotlin.actions:generator:$VERSION")
 }
 
 val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class) {
-    this.workerClasspath.from(workerActionClasspath)
+    this.workerClasspath.from(configurations.resolvable("kotlinActionsWorkerClasspath") {
+        extendsFrom(workerActionDeps.get())
+    })
 }
 
 val actionFile = providers.of(ActionYmlSource::class.java) {
@@ -25,8 +24,6 @@ val actionFile = providers.of(ActionYmlSource::class.java) {
         actionFile.set(layout.projectDirectory.file("action.yml"))
     }
 }
-// https://youtrack.jetbrains.com/issue/KT-62248
-// properties.put("kotlin.js.ir.output.granularity", "whole-program")
 
 kotlin {
     fun setUpTarget(
@@ -68,6 +65,11 @@ kotlin {
                     .flatMap { it.destinationDirectory }) {
                 exclude {
                     it.name.endsWith(".map")
+                }
+                rename {
+                    if (it == "${project.name}-main.mjs") {
+                        fileName.get()
+                    } else it
                 }
             }
             into(dir)
