@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.0-Beta5"
+kotlin = "2.0.0-RC1"
 
 [libraries]
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.3" }
