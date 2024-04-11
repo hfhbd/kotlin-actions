@@ -44,10 +44,10 @@ internal fun ActionYml.generateCode(): FileSpec {
             for ((name, input) in inputs) {
                 val kotlinName = name.toCamelCase()
                 val options = if (input.required) {
-                    CodeBlock.builder().beginControlFlow("").add("  required = true\n").unindent().add("  }").build()
+                    CodeBlock.of(", %M(required = true)", MemberName("com.github.actions", "InputOptions", isExtension = true))
                 } else CodeBlock.of("")
                 functionInputs.add(
-                    "\n  %L = %M.getInput(%S)%L,", nameAllocator.newName(kotlinName), core, name, options
+                    "\n  %L = %M.getInput(%S%L),", nameAllocator.newName(kotlinName), core, name, options
                 )
             }
         }
@@ -66,11 +66,9 @@ internal fun ActionYml.generateCode(): FileSpec {
             addCode(")\n")
             val outputNames = NameAllocator()
             for ((name) in outputs) {
-                val kotlinName = name.toCamelCase()
-                addStatement(
-                    "%M.setOutput(%S, outputs.%L)", core, name, outputNames.newName(name.toCamelCase())
+                addCode(
+                    "\n%M.setOutput(%S, outputs.%L)", core, name, outputNames.newName(name.toCamelCase())
                 )
-                addCode("\n")
             }
         }
     }.build())

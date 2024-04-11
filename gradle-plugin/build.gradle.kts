@@ -8,7 +8,7 @@ dependencies {
     implementation(projects.actionJson)
     compileOnly(projects.generator)
     implementation(libs.plugins.kotlin.multiplatform.toDep())
-    implementation(libs.plugins.kotlin.js.plain.objects.toDep())
+    implementation(libs.plugins.kotlin.plugin.js.plain.objects.toDep())
 
     testImplementation(kotlin("test"))
 }

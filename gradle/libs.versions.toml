@@ -8,5 +8,5 @@ kotlinpoet = { module = "com.squareup:kotlinpoet", version = "1.16.0" }
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-kotlin-js-plain-objects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.ref = "kotlin" }
+kotlin-plugin-js-plain-objects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.ref = "kotlin" }
 publish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }

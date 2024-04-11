@@ -24,17 +24,16 @@ class GeneratorTest {
 
         assertEquals(
             """
+                import com.github.actions.InputOptions
                 import com.github.actions.core
                 import kotlin.String
                 
                 public suspend fun main() {
                   val outputs: Outputs = action(
-                    whoToGreet = core.getInput("who-to-greet") {
-                      required = true
-                    },
+                    whoToGreet = core.getInput("who-to-greet", InputOptions(required = true)),
                   )
+
                   core.setOutput("ti-me", outputs.tiMe)
-                
                 }
                 
                 public data class Outputs(
