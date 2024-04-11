@@ -1,7 +1,8 @@
 package com.github.actions
 
+import kotlinx.js.JsPlainObject
+
 @JsModule("@actions/core")
-@JsNonModule
 external val core: Core
 
 external interface Core {
@@ -12,8 +13,7 @@ external interface Core {
     fun isDebug(): Boolean
 }
 
-fun Core.getInput(name: String, options: InputOptions.() -> Unit): String = getInput(name, js("{}").unsafeCast<InputOptions>().apply(options))
-
+@JsPlainObject
 external interface InputOptions {
     var required: Boolean?
     var trimWhitespace: Boolean?

@@ -34,18 +34,22 @@ kotlin {
         dependsOn: Boolean,
         file: Provider<String>,
     ) {
-        val dir = file.map { it.dropLastWhile { it != '/' } }
+        val dir = layout.projectDirectory.dir(file.map { it.dropLastWhile { it != '/' } })
         val fileName = file.map { it.takeLastWhile { it != '/' } }
 
         js(name) {
             binaries.executable()
             nodejs()
+            useEsModules()
 
             compilerOptions {
-                moduleKind.set(JsModuleKind.MODULE_PLAIN)
-                sourceMap.set(false)
+                moduleKind.set(JsModuleKind.MODULE_ES)
+                useEsClasses.set(true)
+
                 moduleName.set(fileName)
-                sourceMapEmbedSources = null
+
+                sourceMap.set(false)
+                sourceMapEmbedSources.set(JsSourceMapEmbedMode.SOURCE_MAP_SOURCE_CONTENT_NEVER)
             }
         }
         sourceSets {
@@ -62,9 +66,11 @@ kotlin {
             from(
                 tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
                     .flatMap { it.destinationDirectory }) {
+                exclude {
+                    it.name.endsWith(".map")
+                }
             }
-            rename { fileName.get() }
-            into(layout.projectDirectory.dir(dir))
+            into(dir)
         }
 
         tasks.assemble {
