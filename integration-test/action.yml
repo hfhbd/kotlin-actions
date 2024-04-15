@@ -1,5 +1,11 @@
 {
   "name": "Hello World",
+  "inputs": {
+    "token": {
+      "description": "GitHub Token",
+      "required": true
+    }
+  },
   "description": "Greet someone and record the time",
   "runs": {
     "using": "node20",
