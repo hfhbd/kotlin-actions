@@ -6,6 +6,7 @@ external interface Octokit {
     val rest: Rest
 }
 
+// https://github.com/octokit/plugin-rest-endpoint-methods.js/blob/main/docs/
 external interface Rest {
     val repos: Repos
     val users: Users
