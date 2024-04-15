@@ -5,7 +5,6 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.*
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.js-plain-objects")
 }
 
 val workerActionDeps = configurations.dependencyScope("kotlinActions")
