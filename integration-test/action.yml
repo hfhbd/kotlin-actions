@@ -9,6 +9,7 @@
   "description": "Greet someone and record the time",
   "runs": {
     "using": "node20",
-    "main": "dist/actions.mjs"
+    "main": "dist/actions.mjs",
+    "post": "dist/actions-post.mjs"
   }
 }

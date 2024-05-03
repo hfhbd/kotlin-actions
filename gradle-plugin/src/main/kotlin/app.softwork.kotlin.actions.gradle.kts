@@ -29,6 +29,8 @@ val customWebpackConfig = tasks.register("createCustomWebpackConfig", CreateCust
     nodeVersion.set(actionFile.map { it.runs.using.version.dropLastWhile { it != '.' }.dropLast(1) })
 }
 
+val gitHubActionStepAttribute = Attribute.of("GitHubActionStep", String::class.java)
+
 kotlin {
     fun setUpTarget(
         name: String,
@@ -39,6 +41,7 @@ kotlin {
         val fileName = file.map { it.takeLastWhile { it != '/' } }
 
         js(name) {
+            attributes.attribute(gitHubActionStepAttribute, name)
             binaries.executable()
             nodejs()
             useEsModules()
