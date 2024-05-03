@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.*
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.js-plain-objects")
+    id("publish")
 }
 
 kotlin {

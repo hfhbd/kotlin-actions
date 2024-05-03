@@ -1,5 +1,6 @@
 plugins {
     `kotlin-dsl`
+    id("publish")
 }
 
 kotlin.jvmToolchain(8)
