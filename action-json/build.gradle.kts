@@ -12,3 +12,14 @@ kotlin {
 dependencies {
     api(libs.serialization.json)
 }
+
+publishing {
+    publications.register<MavenPublication>("mavenJava") {
+        from(components["java"])
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}

@@ -33,3 +33,13 @@ kotlin {
         }
     }
 }
+
+val emptyJar by tasks.registering(Jar::class)
+
+publishing {
+    publications.withType(MavenPublication::class).configureEach {
+        artifact(emptyJar) {
+            classifier = "javadoc"
+        }
+    }
+}

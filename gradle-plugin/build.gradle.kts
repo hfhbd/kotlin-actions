@@ -43,3 +43,8 @@ configurations.configureEach {
         }
     }
 }
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}

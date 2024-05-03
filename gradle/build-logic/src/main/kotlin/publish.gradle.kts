@@ -3,14 +3,8 @@ plugins {
     id("signing")
 }
 
-val emptyJar by tasks.registering(Jar::class)
-
 publishing {
-    publications.configureEach {
-        this as MavenPublication
-        artifact(emptyJar) {
-            classifier = "javadoc"
-        }
+    publications.withType<MavenPublication>().configureEach {
         pom {
             name.set("app.softwork Kotlin Actions")
             description.set("Write GitHub Actions in Kotlin")
@@ -54,4 +48,10 @@ tasks.withType<AbstractPublishToMaven>().configureEach {
 tasks.withType<AbstractArchiveTask>().configureEach {
     isPreserveFileTimestamps = false
     isReproducibleFileOrder = true
+    filePermissions {
+        unix(644)
+    }
+    dirPermissions {
+        unix(755)
+    }
 }

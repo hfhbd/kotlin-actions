@@ -16,3 +16,14 @@ dependencies {
 
     testImplementation(kotlin("test"))
 }
+
+publishing {
+    publications.register<MavenPublication>("mavenJava") {
+        from(components["java"])
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
