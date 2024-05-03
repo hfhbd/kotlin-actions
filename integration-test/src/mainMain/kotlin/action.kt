@@ -1,6 +1,6 @@
+import com.github.actions.github
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.js.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.*
@@ -8,7 +8,17 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 suspend fun action(token: String) {
-    val client = HttpClient(Js) {
+    println("Hello ${github.context.actor}")
+    val user = getMainBranch(github.context.repo.owner, github.context.repo.repo, token)
+    println("Branch ${user.name}")
+}
+
+suspend fun getMainBranch(
+    owner: String,
+    repo: String,
+    token: String
+): Branch {
+    val client = HttpClient(JsEsModule) {
         install(ContentNegotiation) {
             json(
                 json = Json {
@@ -17,14 +27,16 @@ suspend fun action(token: String) {
                 }
             )
         }
+        expectSuccess = true
     }
-    val user = client.get("https://api.github.com/user") {
+    val branch = client.get("https://api.github.com/repos/$owner/$repo/branches/main") {
         bearerAuth(token)
-    }.body<PublicUser>()
-    println("Hello ${user.login}")
+    }.body<Branch>()
+
+    return branch
 }
 
 @Serializable
-data class PublicUser(
-    val login: String,
+data class Branch(
+    val name: String,
 )
