@@ -9,11 +9,15 @@ import kotlinx.serialization.json.Json
 
 suspend fun action(token: String) {
     println("Hello ${github.context.actor}")
-    val user = getUser(token)
-    println("API ${user.login}")
+    val user = getMainBranch(github.context.repo.owner, github.context.repo.repo, token)
+    println("Branch ${user.name}")
 }
 
-suspend fun getUser(token: String): PublicUser {
+suspend fun getMainBranch(
+    owner: String,
+    repo: String,
+    token: String
+): Branch {
     val client = HttpClient(JsEsModule) {
         install(ContentNegotiation) {
             json(
@@ -25,13 +29,14 @@ suspend fun getUser(token: String): PublicUser {
         }
         expectSuccess = true
     }
-    val user = client.get("https://api.github.com/user") {
+    val branch = client.get("https://api.github.com/repos/$owner/$repo/branches/main") {
         bearerAuth(token)
-    }.body<PublicUser>()
-    return user
+    }.body<Branch>()
+
+    return branch
 }
 
 @Serializable
-data class PublicUser(
-    val login: String,
+data class Branch(
+    val name: String,
 )
