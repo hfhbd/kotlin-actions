@@ -40,6 +40,12 @@ kotlin {
         val dir = layout.projectDirectory.dir(file.map { it.dropLastWhile { it != '/' } })
         val fileName = file.map { it.takeLastWhile { it != '/' } }
 
+        val fullName = project.rootProject.name + if (project === project.rootProject) {
+            "-$name"
+        } else {
+            project.path.replace(':', '-') + '-' + name
+        }
+
         js(name) {
             attributes.attribute(gitHubActionStepAttribute, name)
             binaries.executable()
@@ -67,7 +73,7 @@ kotlin {
                 dependsOn(customWebpackConfig, sync)
                 mode = KotlinWebpackConfig.Mode.PRODUCTION
                 inputFilesDirectory.set(layout.dir(sync.flatMap { it.destinationDirectory }))
-                entryModuleName.set(project.name + "-$name")
+                entryModuleName.set(fullName)
                 esModules.set(true)
                 outputDirectory.set(dir)
                 output.globalObject = "this"

@@ -1,0 +1,19 @@
+{
+  "name": "Hello World",
+  "inputs": {
+    "token": {
+      "description": "GitHub Token",
+      "required": false
+    }
+  },
+  "outputs": {
+    "foo": {
+      "description": "some output"
+    }
+  },
+  "description": "Greet someone and record the time",
+  "runs": {
+    "using": "node20",
+    "main": "dist/actions-sub.mjs"
+  }
+}
