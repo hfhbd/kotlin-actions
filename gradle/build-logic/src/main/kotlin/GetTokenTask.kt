@@ -5,28 +5,24 @@ import org.gradle.api.tasks.*
 import java.io.*
 
 @CacheableTask
-abstract class VersionTask : DefaultTask() {
+abstract class GetTokenTask : DefaultTask() {
     @get:Input
-    abstract val version: Property<String>
-
-    init {
-        version.convention(project.version.toString())
-    }
+    abstract val token: Property<String>
 
     @get:OutputDirectory
     abstract val outputFolder: DirectoryProperty
 
     init {
-        outputFolder.convention(project.layout.buildDirectory.dir("generated/version"))
+        outputFolder.convention(project.layout.buildDirectory.dir("generated/token"))
     }
 
     @TaskAction
     fun generate() {
-        File(outputFolder.asFile.get(), "version.kt").writeText(
+        File(outputFolder.asFile.get(), "token.kt").writeText(
             """
             |package app.softwork.kotlin.actions
             |
-            |internal val VERSION: String = "${version.get()}"
+            |internal val GITHUB_TOKEN: String = "${token.get()}"
             |
             """.trimMargin(),
         )

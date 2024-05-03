@@ -1,3 +1,4 @@
+import com.github.actions.github
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.js.*
@@ -8,6 +9,12 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 suspend fun action(token: String) {
+    println("Hello ${github.context.actor}")
+    val user = getUser(token)
+    println("API ${user.login}")
+}
+
+suspend fun getUser(token: String): PublicUser {
     val client = HttpClient(Js) {
         install(ContentNegotiation) {
             json(
@@ -21,7 +28,7 @@ suspend fun action(token: String) {
     val user = client.get("https://api.github.com/user") {
         bearerAuth(token)
     }.body<PublicUser>()
-    println("Hello ${user.login}")
+    return user
 }
 
 @Serializable
