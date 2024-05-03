@@ -1,5 +1,6 @@
 plugins {
     `kotlin-dsl`
+    id("publish")
 }
 
 kotlin.jvmToolchain(8)
@@ -41,4 +42,9 @@ configurations.configureEach {
             )
         }
     }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }

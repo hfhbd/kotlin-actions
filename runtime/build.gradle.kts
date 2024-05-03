@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.*
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.js-plain-objects")
+    id("publish")
 }
 
 kotlin {
@@ -29,6 +30,16 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
             }
+        }
+    }
+}
+
+val emptyJar by tasks.registering(Jar::class)
+
+publishing {
+    publications.withType(MavenPublication::class).configureEach {
+        artifact(emptyJar) {
+            classifier = "javadoc"
         }
     }
 }

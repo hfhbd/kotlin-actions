@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     id("friendPath")
+    id("publish")
 }
 
 kotlin {
@@ -14,4 +15,15 @@ dependencies {
     implementation(libs.kotlinpoet)
 
     testImplementation(kotlin("test"))
+}
+
+publishing {
+    publications.register<MavenPublication>("mavenJava") {
+        from(components["java"])
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
