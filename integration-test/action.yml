@@ -1,6 +1,12 @@
 {
   "name": "Hello World",
   "description": "Greet someone and record the time",
+  "inputs": {
+    "token": {
+      "description": "GitHub Token",
+      "required": true
+    }
+  },
   "runs": {
     "using": "node20",
     "main": "dist/actions.mjs"

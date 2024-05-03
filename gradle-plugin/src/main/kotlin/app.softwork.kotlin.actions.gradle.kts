@@ -4,7 +4,6 @@ import org.jetbrains.kotlin.gradle.targets.js.ir.*
 
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.js-plain-objects")
 }
 
 val workerActionDeps = configurations.dependencyScope("kotlinActions")
