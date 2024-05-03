@@ -23,6 +23,7 @@ suspend fun getUser(token: String): PublicUser {
                 }
             )
         }
+        expectSuccess = true
     }
     val user = client.get("https://api.github.com/user") {
         bearerAuth(token)
