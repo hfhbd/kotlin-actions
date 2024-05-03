@@ -4,7 +4,6 @@ package com.github.actions
 external val github: GitHub
 
 external interface GitHub {
-    fun getOctokit(token: String): Octokit
     val context: Context
 }
 
