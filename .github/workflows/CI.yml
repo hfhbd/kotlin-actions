@@ -35,4 +35,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: ./integration-test/sub
         id: sub
-      - run: echo ${{ sub.outputs.foo }}
+      - run: echo ${{ steps.sub.outputs.foo }}
