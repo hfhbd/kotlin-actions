@@ -45,8 +45,6 @@ abstract class CreateCustomWebpackConfig : DefaultTask() {
             
             config.target = 'node${nodeVersion.get()}';
             
-            config.externalsType = 'module';
-            
             config.output = {
               filename: config.output.filename,
               path: config.output.path,
