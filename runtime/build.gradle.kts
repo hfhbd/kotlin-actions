@@ -23,7 +23,7 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
                 api("org.jetbrains.kotlin-wrappers:kotlin-node:20.11.30-pre.738")
                 api(npm("@actions/github", "6.0.0"))
-                api(npm("@actions/core", "1.10.1"))
+                api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:0.0.1-pre.738")
             }
         }
         named("jsTest") {

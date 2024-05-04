@@ -16,7 +16,9 @@ internal fun BufferedReader.generateCode(): FileSpec {
     return json.decodeFromString<ActionYml>(readText()).generateCode()
 }
 
-private val core = MemberName("com.github.actions", "core", isExtension = true)
+private val getInput = MemberName("actions.core", "getInput", isExtension = true)
+private val setOutput = MemberName("actions.core", "setOutput", isExtension = true)
+private val jso = MemberName("js.objects", "jso", isExtension = true)
 
 internal fun ActionYml.generateCode(): FileSpec {
     val builder = FileSpec.builder("", "action")
@@ -44,10 +46,10 @@ internal fun ActionYml.generateCode(): FileSpec {
             for ((name, input) in inputs) {
                 val kotlinName = name.toCamelCase()
                 val options = if (input.required) {
-                    CodeBlock.of(", %M(required = true)", MemberName("com.github.actions", "InputOptions", isExtension = true))
+                    CodeBlock.of(", %M { required = true }", jso)
                 } else CodeBlock.of("")
                 functionInputs.add(
-                    "\n  %L = %M.getInput(%S%L),", nameAllocator.newName(kotlinName), core, name, options
+                    "\n  %L = %M(%S%L),", nameAllocator.newName(kotlinName), getInput, name, options
                 )
             }
         }
@@ -67,7 +69,7 @@ internal fun ActionYml.generateCode(): FileSpec {
             val outputNames = NameAllocator()
             for ((name) in outputs) {
                 addCode(
-                    "\n%M.setOutput(%S, outputs.%L)", core, name, outputNames.newName(name.toCamelCase())
+                    "\n%M(%S, outputs.%L)", setOutput, name, outputNames.newName(name.toCamelCase())
                 )
             }
         }
