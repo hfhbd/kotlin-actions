@@ -33,3 +33,6 @@ jobs:
       - uses: ./integration-test
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./integration-test/sub
+        id: sub
+      - run: echo ${{ sub.outputs.foo }}
