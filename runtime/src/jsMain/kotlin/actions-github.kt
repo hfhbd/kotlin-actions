@@ -1,5 +1,7 @@
 package com.github.actions
 
+import node.process.process
+
 @JsModule("@actions/github")
 external val github: GitHub
 
@@ -28,3 +30,5 @@ external interface Repo {
     val owner: String
     val repo: String
 }
+
+val Context.token: String get() = process.env["GITHUB_TOKEN"]!!
