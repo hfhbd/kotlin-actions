@@ -22,8 +22,12 @@ abstract class CheckFileTask : DefaultTask() {
 
     @TaskAction
     fun checkContent() {
-        require(File(expected.get()).readText() == actual.asFile.get().readText()) {
-            "${File(expected.get())} does not match ${actual.asFile.get()}. Did you forgot to call ${copyTaskPath.get()}?"
+        val expected = File(expected.get())
+        require(expected.exists()) {
+            "$expected not found. Did you forgot to call ${copyTaskPath.get()}?"
+        }
+        require(expected.readText() == actual.asFile.get().readText()) {
+            "$expected does not match ${actual.asFile.get()}. Did you forgot to call ${copyTaskPath.get()}?"
         }
     }
 }
