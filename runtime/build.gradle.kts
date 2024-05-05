@@ -21,7 +21,7 @@ kotlin {
         named("jsMain") {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-                api("org.jetbrains.kotlin-wrappers:kotlin-node:20.11.30-pre.738")
+                api("org.jetbrains.kotlin-wrappers:kotlin-node:20.11.30-pre.739")
                 api(npm("@actions/github", "6.0.0"))
                 api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:0.0.1-pre.738")
             }
