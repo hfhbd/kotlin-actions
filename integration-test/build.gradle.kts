@@ -10,7 +10,7 @@ val writeToken by tasks.registering(GetTokenTask::class) {
 kotlin.sourceSets {
     mainMain {
         dependencies {
-            implementation(libs.ktor.client.js)
+            implementation("app.softwork.kotlin.actions:ktor-engine")
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
         }
@@ -19,7 +19,7 @@ kotlin.sourceSets {
         kotlin.srcDir(writeToken)
         dependencies {
             implementation(kotlin("test"))
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+            implementation(libs.coroutines.test)
         }
     }
 }
