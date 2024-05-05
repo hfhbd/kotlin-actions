@@ -24,10 +24,10 @@ abstract class CheckFileTask : DefaultTask() {
     fun checkContent() {
         val expected = File(expected.get())
         require(expected.exists()) {
-            "$expected not found. Did you forgot to call ${copyTaskPath.get()}?"
+            "$expected not found. Did you forget to call ${copyTaskPath.get()}?"
         }
         require(expected.readText() == actual.asFile.get().readText()) {
-            "$expected does not match ${actual.asFile.get()}. Did you forgot to call ${copyTaskPath.get()}?"
+            "$expected does not match ${actual.asFile.get()}. Did you forget to call ${copyTaskPath.get()}?"
         }
     }
 }
