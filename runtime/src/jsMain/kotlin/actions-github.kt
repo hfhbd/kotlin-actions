@@ -28,3 +28,5 @@ external interface Repo {
     val owner: String
     val repo: String
 }
+
+val Context.token: String get() = js("'node:process'.process").env["GITHUB_TOKEN"]!!
