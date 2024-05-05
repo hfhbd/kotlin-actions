@@ -26,22 +26,17 @@ abstract class CreateCustomWebpackConfig : DefaultTask() {
     @TaskAction
     fun write() {
         val file = File(outputDir.asFile.get(), "webpack.kotlin.actions.node.js")
-        val unused = """
-            import path from "path";
-            import { fileURLToPath } from "url";
-
-            const __dirname = path.dirname(fileURLToPath(import.meta.url));    
-                
-            config.entry = {
-              main: [path.resolve(__dirname, "${entry.asFile.get().toRelativeString(entry.asFile.get().parentFile.parentFile)}")]
-            };
-        """.trimIndent()
 
         file.writeText(
             """ 
             config.experiments = {
               outputModule: true,
             };
+            config.externalsType = 'module';
+            config.devtool = false;
+            config.optimization = {
+		      removeEmptyChunks: true
+	        };
             
             config.target = 'node${nodeVersion.get()}';
             
@@ -49,11 +44,17 @@ abstract class CreateCustomWebpackConfig : DefaultTask() {
               filename: config.output.filename,
               path: config.output.path,
               
+              libraryTarget: 'module',
               library: {
                 type: "module",
               },
               module: true,
               chunkFormat: 'module',
+              chunkLoading: 'import',
+              environment: {
+                module: true,
+                dynamicImport: true,
+              }
             };
 
         """.trimIndent()
