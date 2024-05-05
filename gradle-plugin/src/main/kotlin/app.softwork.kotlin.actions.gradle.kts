@@ -78,6 +78,7 @@ kotlin {
                 outputDirectory.set(layout.buildDirectory.dir("actions/dist/$name"))
                 output.globalObject = "this"
                 mainOutputFileName.set(fileName)
+                sourceMaps = false
                 webpackConfigApplier {
                     configDirectory = customWebpackConfig.flatMap { it.outputDir.asFile }.get()
                 }
