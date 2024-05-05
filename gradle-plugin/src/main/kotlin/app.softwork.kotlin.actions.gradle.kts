@@ -75,7 +75,7 @@ kotlin {
                 inputFilesDirectory.set(layout.dir(sync.flatMap { it.destinationDirectory }))
                 entryModuleName.set(fullName)
                 esModules.set(true)
-                outputDirectory.set(dir)
+                outputDirectory.set(layout.buildDirectory.dir("actions/dist/$name"))
                 output.globalObject = "this"
                 mainOutputFileName.set(fileName)
                 webpackConfigApplier {
@@ -85,9 +85,24 @@ kotlin {
             customWebpackConfig {
                 entry.set(executable.flatMap { it.entry })
             }
+            tasks.register("copyAction${name}Dist", Copy::class) {
+                from(executable.flatMap { it.outputDirectory.file(fileName) })
+                into(dir)
+            }
+            val expectedWithoutTasksDependencyToNotRunCopy = objects.fileProperty().apply {
+                set(dir.flatMap { it.file(fileName) })
+            }.locationOnly.map { it.asFile.absolutePath }
+            val checkDist = tasks.register("check${name}Dist", CheckFileTask::class) {
+                actual.set(executable.flatMap { it.outputDirectory.file(fileName) })
+                expected.set(expectedWithoutTasksDependencyToNotRunCopy)
+                copyTaskPath.set(path.dropLastWhile { it != ':' } + "copyAction${name}Dist")
+            }
 
             tasks.assemble {
                 dependsOn(executable)
+            }
+            tasks.check {
+                dependsOn(checkDist)
             }
         }
         sourceSets {
