@@ -25,7 +25,7 @@ abstract class CreateCustomWebpackConfig : DefaultTask() {
 
     @TaskAction
     fun write() {
-        val file = File(outputDir.asFile.get(), "webpack.node.js")
+        val file = File(outputDir.asFile.get(), "webpack.kotlin.actions.node.js")
         val unused = """
             import path from "path";
             import { fileURLToPath } from "url";
