@@ -29,4 +29,4 @@ external interface Repo {
     val repo: String
 }
 
-val Context.token: String get() = js("'node:process'.process").env["GITHUB_TOKEN"]!!
+val GitHub.token: String get() = js("'node:process'.process").env["GITHUB_TOKEN"]!!
