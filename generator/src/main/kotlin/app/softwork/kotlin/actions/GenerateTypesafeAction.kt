@@ -17,6 +17,7 @@ internal fun BufferedReader.generateCode(): FileSpec {
 }
 
 private val getInput = MemberName("actions.core", "getInput", isExtension = true)
+private val setFailed = MemberName("actions.core", "setFailed", isExtension = true)
 private val setOutput = MemberName("actions.core", "setOutput", isExtension = true)
 private val jso = MemberName("js.objects", "jso", isExtension = true)
 
@@ -39,6 +40,8 @@ internal fun ActionYml.generateCode(): FileSpec {
 
     builder.addFunction(FunSpec.builder("main").apply {
         addModifiers(KModifier.SUSPEND)
+
+        beginControlFlow("try")
 
         val functionInputs = CodeBlock.builder()
         val nameAllocator = NameAllocator()
@@ -72,7 +75,11 @@ internal fun ActionYml.generateCode(): FileSpec {
                     "\n%M(%S, outputs.%L)", setOutput, name, outputNames.newName(name.toCamelCase())
                 )
             }
+            addCode("\n")
         }
+        nextControlFlow("catch (e: %T)", ClassName("kotlin", "Error"))
+        addStatement("%M(e)", setFailed)
+        endControlFlow()
     }.build())
     if (outputClass != null) {
         builder.addType(outputClass)

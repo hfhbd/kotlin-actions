@@ -9,8 +9,15 @@ class GeneratorTest {
 
         assertEquals(
             """
+                import actions.core.setFailed
+                import kotlin.Error
+
                 public suspend fun main() {
-                  action()
+                  try {
+                    action()
+                  } catch (e: Error) {
+                    setFailed(e)
+                  }
                 }
 
             """.trimIndent(),
@@ -25,16 +32,22 @@ class GeneratorTest {
         assertEquals(
             """
                 import actions.core.getInput
+                import actions.core.setFailed
                 import actions.core.setOutput
                 import js.objects.jso
+                import kotlin.Error
                 import kotlin.String
                 
                 public suspend fun main() {
-                  val outputs: Outputs = action(
-                    whoToGreet = getInput("who-to-greet", jso { required = true }),
-                  )
+                  try {
+                    val outputs: Outputs = action(
+                      whoToGreet = getInput("who-to-greet", jso { required = true }),
+                    )
 
-                  setOutput("ti-me", outputs.tiMe)
+                    setOutput("ti-me", outputs.tiMe)
+                  } catch (e: Error) {
+                    setFailed(e)
+                  }
                 }
                 
                 public data class Outputs(
