@@ -2,5 +2,3 @@
 .idea
 build
 .kotlin
-integration-test/dist
-integration-test/sub/dist

@@ -29,7 +29,7 @@ jobs:
         run: ./gradlew build
 
       - name: Build action
-        run: ./gradlew copyActionmainDist copyActionpostDist build -pintegration-test -Ptoken=${{ secrets.GITHUB_TOKEN }}
+        run: ./gradlew build -pintegration-test -Ptoken=${{ secrets.GITHUB_TOKEN }}
       - uses: ./integration-test
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
