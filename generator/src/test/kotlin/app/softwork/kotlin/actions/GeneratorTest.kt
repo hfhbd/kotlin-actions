@@ -42,6 +42,7 @@ class GeneratorTest {
                   try {
                     val outputs: Outputs = action(
                       whoToGreet = getInput("who-to-greet", jso { required = true }),
+                      whoTo = getInput("who-to"),
                     )
 
                     setOutput("ti-me", outputs.tiMe)
