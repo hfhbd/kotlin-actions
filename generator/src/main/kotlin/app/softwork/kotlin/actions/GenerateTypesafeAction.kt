@@ -13,7 +13,9 @@ public fun File.generateCode(outputFile: File) {
 }
 
 internal fun BufferedReader.generateCode(): FileSpec {
-    return json.decodeFromString<ActionYml>(readText()).generateCode()
+    val jsonText = readText()
+    val actionJson = jsonText.replace(replaceActionExpressions, "\"\"")
+    return json.decodeFromString<ActionYml>(actionJson).generateCode()
 }
 
 private val getInput = MemberName("actions.core", "getInput", isExtension = true)
