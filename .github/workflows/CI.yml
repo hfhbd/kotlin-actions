@@ -30,6 +30,11 @@ jobs:
 
       - name: Build action
         run: ./gradlew build -pintegration-test -Ptoken=${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: generatedDist
+          path: integration-test/sub/build/actions/dist/main/actions-sub.mjs
       - uses: ./integration-test
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

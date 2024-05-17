@@ -69,7 +69,7 @@ kotlin {
                 tasks.register("createCustomWebpackConfig${name}", CreateCustomWebpackConfig::class)
             executable.configure {
                 dependsOn(customWebpackConfig, sync)
-                mode = KotlinWebpackConfig.Mode.PRODUCTION
+                mode = KotlinWebpackConfig.Mode.DEVELOPMENT
                 inputFilesDirectory.set(layout.dir(sync.flatMap { it.destinationDirectory }))
                 entryModuleName.set(fullName)
                 esModules.set(true)
