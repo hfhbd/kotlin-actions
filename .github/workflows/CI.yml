@@ -39,6 +39,16 @@ jobs:
       - uses: ./integration-test
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: actionMain
+          path: integration-test/dist/actions.mjs
       - uses: ./integration-test/sub
         id: sub
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: actionSub
+          path: integration-test/sub/dist/actions-sub.mjs
       - run: echo ${{ steps.sub.outputs.foo }}
