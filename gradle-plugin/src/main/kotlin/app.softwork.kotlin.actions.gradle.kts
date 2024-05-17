@@ -25,10 +25,6 @@ val actionFile = providers.of(ActionYmlSource::class) {
     }
 }
 
-val customWebpackConfig = tasks.register("createCustomWebpackConfig", CreateCustomWebpackConfig::class) {
-    nodeVersion.set(actionFile.map { it.runs.using.version.dropLastWhile { it != '.' }.dropLast(1) })
-}
-
 val gitHubActionStepAttribute = Attribute.of("GitHubActionStep", String::class.java)
 
 kotlin {
@@ -69,6 +65,8 @@ kotlin {
                 project.objects
             )
             val sync = tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
+            val customWebpackConfig =
+                tasks.register("createCustomWebpackConfig${name}", CreateCustomWebpackConfig::class)
             executable.configure {
                 dependsOn(customWebpackConfig, sync)
                 mode = KotlinWebpackConfig.Mode.PRODUCTION
@@ -76,7 +74,6 @@ kotlin {
                 entryModuleName.set(fullName)
                 esModules.set(true)
                 outputDirectory.set(layout.buildDirectory.dir("actions/dist/$name"))
-                output.globalObject = "this"
                 mainOutputFileName.set(fileName)
                 sourceMaps = false
                 webpackConfigApplier {
@@ -84,7 +81,8 @@ kotlin {
                 }
             }
             customWebpackConfig {
-                entry.set(executable.flatMap { it.entry })
+                entryFileName.set(fileName)
+                outputDir.set(project.layout.buildDirectory.dir("actions/webpack/$name"))
             }
             tasks.register("copyAction${name}Dist", Copy::class) {
                 from(executable.flatMap { it.outputDirectory.file(fileName) })
