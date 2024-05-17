@@ -25,6 +25,7 @@ jobs:
         with:
           validate-wrappers: true
           gradle-home-cache-cleanup: true
+      - run: ./gradlew copyActionmainDist copyActionpostDist -pintegration-test -Ptoken=${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build -Ptoken=${{ secrets.GITHUB_TOKEN }}
 
