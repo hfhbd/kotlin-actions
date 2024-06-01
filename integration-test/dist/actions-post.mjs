@@ -275,9 +275,6 @@ function unsafeCast(_this__u8e3s4) {
   // Inline function 'kotlin.js.asDynamic' call
   return _this__u8e3s4;
 }
-function asDynamic(_this__u8e3s4) {
-  return _this__u8e3s4;
-}
 //region block: post-declaration
 initMetadataForObject(Unit, 'Unit');
 initMetadataForClass(BaseOutput, 'BaseOutput');

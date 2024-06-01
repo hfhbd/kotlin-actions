@@ -25,7 +25,7 @@ kotlin {
         named("jsMain") {
             dependencies {
                 api(libs.ktor.client.js)
-                api("org.jetbrains.kotlin-wrappers:kotlin-node:20.11.30-pre.749")
+                api("org.jetbrains.kotlin-wrappers:kotlin-node:20.11.30-pre.754")
             }
         }
         named("jsTest") {

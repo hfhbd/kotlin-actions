@@ -9,7 +9,6 @@ import io.ktor.util.*
 import io.ktor.util.date.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
-import js.buffer.BufferSource
 import js.iterable.toList
 import js.objects.jso
 import js.typedarrays.asInt8Array
@@ -55,7 +54,7 @@ private class JsEsModuleEngine(
 
         val status = HttpStatusCode(rawResponse.status.toInt(), rawResponse.statusText)
         val headers = Headers.build {
-            rawResponse.headers.keys().toList().forEach { key ->
+            for ((key, _) in rawResponse.headers) {
                 append(key, rawResponse.headers[key]!!)
             }
         }
@@ -84,7 +83,7 @@ internal suspend fun HttpRequestData.toRaw(
         jsHeaders[key] = value
     }
 
-    val bodyBytes: BufferSource? = when (val content = body) {
+    val bodyBytes = when (val content = body) {
         is OutgoingContent.ByteArrayContent -> content.bytes().asInt8Array()
         is OutgoingContent.ReadChannelContent -> content.readFrom().readRemaining().readBytes().asInt8Array()
         is OutgoingContent.WriteChannelContent -> {

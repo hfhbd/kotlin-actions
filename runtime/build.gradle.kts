@@ -1,19 +1,14 @@
-import org.jetbrains.kotlin.gradle.dsl.*
-
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.js-plain-objects")
     id("publish")
 }
 
 kotlin {
     js {
         nodejs()
-        useEsModules()
 
         compilerOptions {
-            moduleKind.set(JsModuleKind.MODULE_ES)
-            useEsClasses.set(true)
+            target.set("es2015")
         }
     }
 
@@ -22,7 +17,7 @@ kotlin {
             dependencies {
                 api(libs.coroutines.core)
                 api(npm("@actions/github", "6.0.0"))
-                api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:0.0.1-pre.749")
+                api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:0.0.1-pre.754")
             }
         }
         named("jsTest") {
