@@ -22,7 +22,7 @@ kotlin {
             dependencies {
                 api(libs.coroutines.core)
                 api(npm("@actions/github", "6.0.0"))
-                api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:0.0.1-pre.749")
+                api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:0.0.1-pre.757")
             }
         }
         named("jsTest") {
