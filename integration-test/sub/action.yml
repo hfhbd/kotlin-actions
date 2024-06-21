@@ -3,7 +3,12 @@
   "inputs": {
     "token": {
       "description": "GitHub Token",
-      "required": false
+      "required": false,
+      "default": "someToken"
+    },
+    "foo": {
+      "description": "Foo",
+      "default": "asdf"
     }
   },
   "outputs": {

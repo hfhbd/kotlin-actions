@@ -6,6 +6,10 @@
       "description": "Who to greet",
       "required": true,
       "default": "World"
+    },
+    "who-to": {
+      "description": "Who to greet",
+      "default": ${{ github.actor }}
     }
   },
   "outputs": {

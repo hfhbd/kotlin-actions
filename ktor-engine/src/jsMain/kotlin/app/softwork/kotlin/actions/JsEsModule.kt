@@ -12,7 +12,6 @@ import io.ktor.utils.io.core.*
 import js.buffer.BufferSource
 import js.iterable.toList
 import js.objects.jso
-import js.promise.await
 import js.typedarrays.asInt8Array
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -114,7 +113,7 @@ internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): B
         val body = response.body ?: error("Fail to get body")
         val reader = body.getReader()
         while (true) {
-            when (val result = reader.read().await()) {
+            when (val result = reader.read()) {
                 is ReadableStreamReadDoneResult -> {
                     val lastValue = result.value
                     if (lastValue != null) {

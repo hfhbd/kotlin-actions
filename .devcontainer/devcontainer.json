@@ -3,7 +3,7 @@
     "features": {
         "ghcr.io/devcontainers/features/sshd:1": {}
     },
-    "updateContentCommand": "./gradlew build --dry-run",
+    "updateContentCommand": "./gradlew build --dry-run && ./gradlew build --dry-run -pintegration-test",
     "remoteEnv": {
         "ORG_GRADLE_PROJECT_token": "${localEnv:GITHUB_TOKEN}"
     }
