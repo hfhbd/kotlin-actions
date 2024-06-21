@@ -66,7 +66,6 @@ kotlin {
                 "${name}Executable",
                 KotlinWebpack::class,
                 compilations.getByName("main"),
-                project.objects
             )
             val sync = tasks.named("${name}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
             executable.configure {
