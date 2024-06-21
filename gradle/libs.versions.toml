@@ -4,7 +4,7 @@ coroutines = "1.8.1"
 ktor = "2.3.11"
 
 [libraries]
-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.6.3" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.0" }
 kotlinpoet = { module = "com.squareup:kotlinpoet", version = "1.16.0" }
 
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
