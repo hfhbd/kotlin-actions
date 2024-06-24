@@ -9,7 +9,6 @@ import io.ktor.util.*
 import io.ktor.util.date.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
-import js.iterable.toList
 import js.objects.jso
 import js.typedarrays.asInt8Array
 import kotlinx.coroutines.CoroutineScope
@@ -54,8 +53,8 @@ private class JsEsModuleEngine(
 
         val status = HttpStatusCode(rawResponse.status.toInt(), rawResponse.statusText)
         val headers = Headers.build {
-            for ((key, _) in rawResponse.headers) {
-                append(key, rawResponse.headers[key]!!)
+            for ((key, value) in rawResponse.headers) {
+                append(key, value)
             }
         }
         val version = HttpProtocolVersion.HTTP_1_1
