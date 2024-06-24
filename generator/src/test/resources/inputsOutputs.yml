@@ -9,7 +9,7 @@
     },
     "who-to": {
       "description": "Who to greet",
-      "default": ${{ github.actor }}
+      "default": "${{ github.actor }}"
     }
   },
   "outputs": {
