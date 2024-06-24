@@ -10,50 +10,55 @@ import java.io.*
 @CacheableTask
 abstract class CreateCustomWebpackConfig : DefaultTask() {
     @get:Input
-    abstract val nodeVersion: Property<String>
-
-    @get:InputFile
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val entry: RegularFileProperty
+    abstract val entryFileName: Property<String>
 
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
 
-    init {
-        outputDir.convention(project.layout.buildDirectory.dir("actions/webpack"))
-    }
-
     @TaskAction
     fun write() {
         val file = File(outputDir.asFile.get(), "webpack.kotlin.actions.node.js")
-        val unused = """
-            import path from "path";
-            import { fileURLToPath } from "url";
-
-            const __dirname = path.dirname(fileURLToPath(import.meta.url));    
-                
-            config.entry = {
-              main: [path.resolve(__dirname, "${entry.asFile.get().toRelativeString(entry.asFile.get().parentFile.parentFile)}")]
-            };
-        """.trimIndent()
 
         file.writeText(
-            """ 
+            //language=javascript
+            """
+const builtInNodeModules = require('node:module').builtinModules;
+
             config.experiments = {
               outputModule: true,
             };
+            config.devtool = false;
             
-            config.target = 'node${nodeVersion.get()}';
-            
+            config.target = 'es2022';
+
+config.externals = [
+    async function ({request}) {
+        const isBuiltIn = request.startsWith('node:')
+            || builtInNodeModules.includes(request);
+
+        if (isBuiltIn) {
+            return Promise.resolve(`module ${'$'}{request}`);
+        }
+    }
+]
+config.resolve = {
+    conditionNames: ['import', 'node']
+};
+
             config.output = {
-              filename: config.output.filename,
+              filename: '${entryFileName.get()}',
               path: config.output.path,
               
+              libraryTarget: 'module',
               library: {
                 type: "module",
               },
               module: true,
               chunkFormat: 'module',
+              chunkLoading: 'import',
+              environment: {
+                module: true,
+              }
             };
 
         """.trimIndent()
