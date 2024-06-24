@@ -8,7 +8,7 @@
     },
     "foo": {
       "description": "Foo",
-      "default": "asdf"
+      "default": ${{ github.actor }}
     }
   },
   "outputs": {
