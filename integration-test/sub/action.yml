@@ -4,7 +4,7 @@
     "token": {
       "description": "GitHub Token",
       "required": false,
-      "default": ${{ github.token }}
+      "default": "${{ github.token }}"
     },
     "foo": {
       "description": "Foo",
