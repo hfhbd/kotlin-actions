@@ -4,11 +4,11 @@
     "token": {
       "description": "GitHub Token",
       "required": false,
-      "default": "someToken"
+      "default": ${{ github.token }}
     },
     "foo": {
       "description": "Foo",
-      "default": ${{ github.actor }}
+      "default": "asdf"
     }
   },
   "outputs": {
