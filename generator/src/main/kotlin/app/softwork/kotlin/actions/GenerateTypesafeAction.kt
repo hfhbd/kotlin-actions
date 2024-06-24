@@ -26,13 +26,14 @@ private val jso = MemberName("js.objects", "jso", isExtension = true)
 internal fun ActionYml.generateCode(): FileSpec {
     val builder = FileSpec.builder("", "action")
 
-    val outputClass = if (outputs != null) {
+    val outputClass = if (outputs.isNotEmpty()) {
         TypeSpec.classBuilder("Outputs").apply {
             addModifiers(KModifier.DATA)
             val constructor = FunSpec.constructorBuilder()
             for ((name, output) in outputs) {
                 addProperty(
-                    PropertySpec.builder(name.toCamelCase(), STRING).addKdoc(output.description).initializer(name.toCamelCase()).build()
+                    PropertySpec.builder(name.toCamelCase(), STRING).addKdoc(output.description)
+                        .initializer(name.toCamelCase()).build()
                 )
                 constructor.addParameter(name.toCamelCase(), STRING)
             }
@@ -47,27 +48,26 @@ internal fun ActionYml.generateCode(): FileSpec {
 
         val functionInputs = CodeBlock.builder()
         val nameAllocator = NameAllocator()
-        if (inputs != null) {
-            for ((name, input) in inputs) {
-                val kotlinName = name.toCamelCase()
-                val options = if (input.required) {
-                    CodeBlock.of(", %M { required = true }", jso)
-                } else CodeBlock.of("")
-                functionInputs.add(
-                    "\n  %L = %M(%S%L),", nameAllocator.newName(kotlinName), getInput, name, options
-                )
-            }
+        for ((name, input) in inputs) {
+            val kotlinName = name.toCamelCase()
+            val options = if (input.required) {
+                CodeBlock.of(", %M { required = true }", jso)
+            } else CodeBlock.of("")
+            functionInputs.add(
+                "\n  %L = %M(%S%L)%L,", nameAllocator.newName(kotlinName), getInput, name, options,
+                if (!input.required) CodeBlock.of(".ifEmpty { null }") else CodeBlock.of("")
+            )
         }
 
-        if (outputs == null) {
+        if (outputs.isEmpty()) {
             addCode("action(%L", functionInputs.build())
-            if (inputs != null) {
+            if (inputs.isNotEmpty()) {
                 addCode("\n")
             }
             addCode(")\n")
         } else {
             addCode("val outputs: %N = action(%L", outputClass!!, functionInputs.build())
-            if (inputs != null) {
+            if (inputs.isNotEmpty()) {
                 addCode("\n")
             }
             addCode(")\n")

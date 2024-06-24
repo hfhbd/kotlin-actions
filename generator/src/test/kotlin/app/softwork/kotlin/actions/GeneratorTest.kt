@@ -41,8 +41,9 @@ class GeneratorTest {
                 public suspend fun main() {
                   try {
                     val outputs: Outputs = action(
-                      whoToGreet = getInput("who-to-greet", jso { required = true }),
-                      whoTo = getInput("who-to"),
+                      nonnullRequired = getInput("nonnull-required", jso { required = true }),
+                      nonnullNotRequiredButDefault = getInput("nonnull-not-required-but-default").ifEmpty { null },
+                      nullable = getInput("nullable").ifEmpty { null },
                     )
 
                     setOutput("ti-me", outputs.tiMe)
