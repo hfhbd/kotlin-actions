@@ -2,7 +2,12 @@ import org.jetbrains.kotlin.gradle.dsl.*
 
 plugins {
     kotlin("multiplatform")
+    kotlin("plugin.serialization")
     id("publish")
+}
+
+val writeToken by tasks.registering(GetTokenTask::class) {
+    token.set(providers.gradleProperty("token"))
 }
 
 kotlin {
@@ -21,6 +26,15 @@ kotlin {
             dependencies {
                 api(libs.ktor.client.js)
                 api("org.jetbrains.kotlin-wrappers:kotlin-node:20.11.30-pre.761")
+            }
+        }
+        named("jsTest") {
+            kotlin.srcDir(writeToken)
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.coroutines.test)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
             }
         }
     }
