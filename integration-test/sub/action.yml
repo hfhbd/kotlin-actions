@@ -13,6 +13,9 @@
   "outputs": {
     "foo": {
       "description": "some output"
+    },
+    "workspace": {
+      "description": "current workspace"
     }
   },
   "description": "Greet someone and record the time",
