@@ -78,8 +78,9 @@ kotlin {
                 output.globalObject = "this"
                 mainOutputFileName.set(fileName)
                 sourceMaps = false
+                val configDir = customWebpackConfig.flatMap { it.outputDir.asFile }
                 webpackConfigApplier {
-                    configDirectory = customWebpackConfig.flatMap { it.outputDir.asFile }.get()
+                    configDirectory = configDir.get()
                 }
             }
             customWebpackConfig {
