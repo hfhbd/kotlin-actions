@@ -1,5 +1,6 @@
-import com.github.actions.github
+import node.process.process
 
-suspend fun action(token: String, foo: String?): Outputs {
-    return Outputs(foo ?: token)
+fun action(token: String, foo: String?): Outputs {
+    val currentWorkspace = process.env["GITHUB_WORKSPACE"]!!
+    return Outputs(foo ?: token, currentWorkspace)
 }
