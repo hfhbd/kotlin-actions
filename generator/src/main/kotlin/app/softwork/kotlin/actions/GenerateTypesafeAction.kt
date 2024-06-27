@@ -21,7 +21,7 @@ internal fun BufferedReader.generateCode(): FileSpec {
 private val getInput = MemberName("actions.core", "getInput", isExtension = true)
 private val setFailed = MemberName("actions.core", "setFailed", isExtension = true)
 private val setOutput = MemberName("actions.core", "setOutput", isExtension = true)
-private val jso = MemberName("js.objects", "jso", isExtension = true)
+private val InputOptions = MemberName("actions.core", "InputOptions", isExtension = true)
 
 internal fun ActionYml.generateCode(): FileSpec {
     val builder = FileSpec.builder("", "action")
@@ -51,7 +51,7 @@ internal fun ActionYml.generateCode(): FileSpec {
         for ((name, input) in inputs) {
             val kotlinName = name.toCamelCase()
             val options = if (input.required) {
-                CodeBlock.of(", %M { required = true }", jso)
+                CodeBlock.of(", %M(required = true)", InputOptions)
             } else CodeBlock.of("")
             functionInputs.add(
                 "\n  %L = %M(%S%L)%L,", nameAllocator.newName(kotlinName), getInput, name, options,
