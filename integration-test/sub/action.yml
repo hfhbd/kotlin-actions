@@ -16,6 +16,9 @@
     },
     "workspace": {
       "description": "current workspace"
+    },
+    "token": {
+      "description": "current token"
     }
   },
   "description": "Greet someone and record the time",

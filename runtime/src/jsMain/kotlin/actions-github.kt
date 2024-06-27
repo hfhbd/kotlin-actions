@@ -1,5 +1,7 @@
 package com.github.actions
 
+import node.process.process
+
 @JsModule("@actions/github")
 external val github: GitHub
 
@@ -30,3 +32,5 @@ external interface Repo {
 }
 
 inline val Context.payload: dynamic get() = asDynamic().payload
+
+val GitHub.token: String get() = process.env["GITHUB_TOKEN"]!!
