@@ -31,18 +31,19 @@ class GeneratorTest {
 
         assertEquals(
             """
+                import actions.core.InputOptions
                 import actions.core.getInput
                 import actions.core.setFailed
                 import actions.core.setOutput
-                import js.objects.jso
                 import kotlin.Error
                 import kotlin.String
                 
                 public suspend fun main() {
                   try {
                     val outputs: Outputs = action(
-                      whoToGreet = getInput("who-to-greet", jso { required = true }),
-                      whoTo = getInput("who-to"),
+                      nonnullRequired = getInput("nonnull-required", InputOptions(required = true)),
+                      nonnullNotRequiredButDefault = getInput("nonnull-not-required-but-default").ifEmpty { null },
+                      nullable = getInput("nullable").ifEmpty { null },
                     )
 
                     setOutput("ti-me", outputs.tiMe)

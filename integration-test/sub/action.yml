@@ -3,17 +3,19 @@
   "inputs": {
     "token": {
       "description": "GitHub Token",
-      "required": false,
-      "default": "someToken"
+      "required": true,
+      "default": "${{ github.token }}"
     },
     "foo": {
-      "description": "Foo",
-      "default": "asdf"
+      "description": "Foo"
     }
   },
   "outputs": {
     "foo": {
       "description": "some output"
+    },
+    "workspace": {
+      "description": "current workspace"
     }
   },
   "description": "Greet someone and record the time",

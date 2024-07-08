@@ -2,14 +2,16 @@
   "name": "Hello World",
   "description": "Greet someone and record the time",
   "inputs": {
-    "who-to-greet": {
+    "nonnull-required": {
       "description": "Who to greet",
-      "required": true,
-      "default": "World"
+      "required": true
     },
-    "who-to": {
+    "nonnull-not-required-but-default": {
       "description": "Who to greet",
-      "default": ${{ github.actor }}
+      "default": "${{ github.actor }}"
+    },
+    "nullable": {
+      "description": "Nullable input"
     }
   },
   "outputs": {

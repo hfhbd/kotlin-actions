@@ -25,30 +25,16 @@ jobs:
         with:
           validate-wrappers: true
           gradle-home-cache-cleanup: true
-      - run: ./gradlew copyActionmainDist copyActionpostDist -pintegration-test -Ptoken=${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         run: ./gradlew build -Ptoken=${{ secrets.GITHUB_TOKEN }}
 
       - name: Build action
         run: ./gradlew build -x checkmainDist -x checkpostdist -pintegration-test -Ptoken=${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: generatedDist
-          path: integration-test/sub/build/actions/dist/main/actions-sub.mjs
       - uses: ./integration-test
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: actionMain
-          path: integration-test/dist/actions.mjs
       - uses: ./integration-test/sub
         id: sub
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: actionSub
-          path: integration-test/sub/dist/actions-sub.mjs
-      - run: echo ${{ steps.sub.outputs.foo }}
+      - run: |
+          echo ${{ steps.sub.outputs.foo }}
+          echo ${{ steps.sub.outputs.workspace }}

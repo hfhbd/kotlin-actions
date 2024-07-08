@@ -28,3 +28,5 @@ external interface Repo {
     val owner: String
     val repo: String
 }
+
+inline val Context.payload: dynamic get() = asDynamic().payload
