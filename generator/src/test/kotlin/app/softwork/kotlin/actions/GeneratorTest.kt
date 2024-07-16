@@ -8,18 +8,25 @@ class GeneratorTest {
         val file = GeneratorTest::class.java.getResourceAsStream("/action.yml")!!.bufferedReader()
 
         assertEquals(
+            //language=kotlin
             """
-                import actions.core.setFailed
-                import kotlin.Error
-
+                import kotlin.Throwable
+                import kotlin.js.JsModule
+                
                 public suspend fun main() {
                   try {
                     action()
-                  } catch (e: Error) {
+                  } catch (e: Throwable) {
                     setFailed(e)
                   }
                 }
-
+                
+                /**
+                 * https://github.com/JetBrains/kotlin-wrappers/issues/2298
+                 */
+                @JsModule("@actions/core")
+                public external fun setFailed(error: Throwable)
+                
             """.trimIndent(),
             file.generateCode().toString(),
         )
@@ -30,13 +37,14 @@ class GeneratorTest {
         val file = GeneratorTest::class.java.getResourceAsStream("/inputsOutputs.yml")!!.bufferedReader()
 
         assertEquals(
+            //language=kotlin
             """
                 import actions.core.InputOptions
                 import actions.core.getInput
-                import actions.core.setFailed
                 import actions.core.setOutput
-                import kotlin.Error
                 import kotlin.String
+                import kotlin.Throwable
+                import kotlin.js.JsModule
                 
                 public suspend fun main() {
                   try {
@@ -47,7 +55,7 @@ class GeneratorTest {
                     )
 
                     setOutput("ti-me", outputs.tiMe)
-                  } catch (e: Error) {
+                  } catch (e: Throwable) {
                     setFailed(e)
                   }
                 }
@@ -58,6 +66,12 @@ class GeneratorTest {
                    */
                   public val tiMe: String,
                 )
+                
+                /**
+                 * https://github.com/JetBrains/kotlin-wrappers/issues/2298
+                 */
+                @JsModule("@actions/core")
+                public external fun setFailed(error: Throwable)
 
             """.trimIndent(),
             file.generateCode().toString(),
