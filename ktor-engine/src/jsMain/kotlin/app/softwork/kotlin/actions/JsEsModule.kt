@@ -66,7 +66,7 @@ private class JsEsModuleEngine(
             requestTime,
             headers,
             version,
-            body,
+            body ?: NullBody,
             callContext
         )
     }
@@ -106,26 +106,30 @@ internal suspend fun HttpRequestData.toRaw(
     }
 }
 
-internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel {
+internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel? {
+    val body = response.body ?: return null
     val data = flow {
-        val body = response.body ?: error("Fail to get body")
         val reader = body.getReader()
-        while (true) {
-            when (val result = reader.read()) {
-                is ReadableStreamReadDoneResult -> {
-                    val lastValue = result.value
-                    if (lastValue != null) {
-                        emit(lastValue)
+        try {
+            while (true) {
+                when (val result = reader.read()) {
+                    is ReadableStreamReadDoneResult -> {
+                        val lastValue = result.value
+                        if (lastValue != null) {
+                            emit(lastValue)
+                        }
+                        break
                     }
-                    break
-                }
 
-                is ReadableStreamReadValueResult -> emit(
-                    result.value
-                )
+                    is ReadableStreamReadValueResult -> emit(
+                        result.value
+                    )
+                }
             }
+        } finally {
+            reader.cancel()
         }
-    }.cancellable()
+    }
     return scope.writer {
         data.collect {
             channel.writeFully(it.toByteArray())
