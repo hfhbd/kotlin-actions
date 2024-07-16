@@ -36,3 +36,4 @@ rootProject.name = "integration-test"
 includeBuild("..")
 
 include(":sub")
+include(":failure")

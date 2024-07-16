@@ -1,0 +1,8 @@
+{
+  "name": "Failure",
+  "description": "",
+  "runs": {
+    "using": "node20",
+    "main": "dist/actions-failure.mjs"
+  }
+}

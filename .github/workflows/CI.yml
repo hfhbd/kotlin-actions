@@ -38,3 +38,4 @@ jobs:
       - run: |
           echo ${{ steps.sub.outputs.foo }}
           echo ${{ steps.sub.outputs.workspace }}
+      - uses: ./integration-test/failure
