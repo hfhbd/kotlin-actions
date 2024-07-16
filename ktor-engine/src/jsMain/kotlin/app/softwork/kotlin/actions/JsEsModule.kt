@@ -9,12 +9,10 @@ import io.ktor.util.*
 import io.ktor.util.date.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
-import js.objects.jso
 import js.typedarrays.asInt8Array
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flow
 import web.http.BodyInit
 import web.http.RequestInit
@@ -94,16 +92,16 @@ internal suspend fun HttpRequestData.toRaw(
         else -> null
     }
 
-    return jso {
-        method = this@toRaw.method.value
-        headers = jsHeaders
+    return RequestInit(
+        method = this@toRaw.method.value,
+        headers = jsHeaders,
         redirect = if (clientConfig.followRedirects) {
             web.http.RequestRedirect.follow
-        } else web.http.RequestRedirect.manual
-        if (bodyBytes != null) {
-            body = BodyInit(bodyBytes)
-        }
-    }
+        } else web.http.RequestRedirect.manual,
+        body = if (bodyBytes != null) {
+            BodyInit(bodyBytes)
+        } else null,
+    )
 }
 
 internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel? {
@@ -121,9 +119,7 @@ internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): B
                         break
                     }
 
-                    is ReadableStreamReadValueResult -> emit(
-                        result.value
-                    )
+                    is ReadableStreamReadValueResult -> emit(result.value)
                 }
             }
         } finally {
