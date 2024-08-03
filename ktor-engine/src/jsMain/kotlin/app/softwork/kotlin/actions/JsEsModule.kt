@@ -9,15 +9,14 @@ import io.ktor.util.*
 import io.ktor.util.date.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.core.*
-import js.objects.jso
 import js.typedarrays.asInt8Array
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flow
 import web.http.BodyInit
 import web.http.RequestInit
+import web.http.RequestMethod
 import web.http.fetch
 import web.streams.ReadableStreamReadDoneResult
 import web.streams.ReadableStreamReadValueResult
@@ -66,7 +65,7 @@ private class JsEsModuleEngine(
             requestTime,
             headers,
             version,
-            body,
+            body ?: NullBody,
             callContext
         )
     }
@@ -94,38 +93,49 @@ internal suspend fun HttpRequestData.toRaw(
         else -> null
     }
 
-    return jso {
-        method = this@toRaw.method.value
-        headers = jsHeaders
+    return RequestInit(
+        method = when(method.value) {
+            "GET" -> RequestMethod.GET
+            "POST" -> RequestMethod.POST
+            "PUT" -> RequestMethod.PUT
+            "PATCH" -> RequestMethod.PATCH
+            "DELETE" -> RequestMethod.DELETE
+            "HEAD" -> RequestMethod.HEAD
+            "OPTIONS" -> RequestMethod.OPTIONS
+            else -> error("Unsupported HTTP method $method")
+        },
+        headers = jsHeaders,
         redirect = if (clientConfig.followRedirects) {
             web.http.RequestRedirect.follow
-        } else web.http.RequestRedirect.manual
-        if (bodyBytes != null) {
-            body = BodyInit(bodyBytes)
-        }
-    }
+        } else web.http.RequestRedirect.manual,
+        body = if (bodyBytes != null) {
+            BodyInit(bodyBytes)
+        } else null,
+    )
 }
 
-internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel {
+internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): ByteReadChannel? {
+    val body = response.body ?: return null
     val data = flow {
-        val body = response.body ?: error("Fail to get body")
         val reader = body.getReader()
-        while (true) {
-            when (val result = reader.read()) {
-                is ReadableStreamReadDoneResult -> {
-                    val lastValue = result.value
-                    if (lastValue != null) {
-                        emit(lastValue)
+        try {
+            while (true) {
+                when (val result = reader.read()) {
+                    is ReadableStreamReadDoneResult -> {
+                        val lastValue = result.value
+                        if (lastValue != null) {
+                            emit(lastValue)
+                        }
+                        break
                     }
-                    break
-                }
 
-                is ReadableStreamReadValueResult -> emit(
-                    result.value
-                )
+                    is ReadableStreamReadValueResult -> emit(result.value)
+                }
             }
+        } finally {
+            reader.cancel()
         }
-    }.cancellable()
+    }
     return scope.writer {
         data.collect {
             channel.writeFully(it.toByteArray())

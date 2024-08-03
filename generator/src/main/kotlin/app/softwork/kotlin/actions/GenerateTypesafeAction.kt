@@ -79,12 +79,13 @@ internal fun ActionYml.generateCode(): FileSpec {
             }
             addCode("\n")
         }
-        nextControlFlow("catch (e: %T)", ClassName("kotlin", "Error"))
+        nextControlFlow("catch (e: %T)", ClassName("kotlin", "Throwable"))
         addStatement("%M(e)", setFailed)
         endControlFlow()
     }.build())
     if (outputClass != null) {
         builder.addType(outputClass)
     }
+
     return builder.build()
 }

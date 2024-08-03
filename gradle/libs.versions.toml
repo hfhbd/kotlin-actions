@@ -1,11 +1,11 @@
 [versions]
-kotlin = "2.0.20-Beta1"
+kotlin = "2.0.20-RC"
 coroutines = "1.9.0-RC"
 ktor = "2.3.12"
 
 [libraries]
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.1" }
-kotlinpoet = { module = "com.squareup:kotlinpoet", version = "1.18.0" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version = "1.18.1" }
 
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
