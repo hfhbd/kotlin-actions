@@ -80,21 +80,12 @@ internal fun ActionYml.generateCode(): FileSpec {
             addCode("\n")
         }
         nextControlFlow("catch (e: %T)", ClassName("kotlin", "Throwable"))
-        addStatement("setFailed(e)")
+        addStatement("%M(e)", setFailed)
         endControlFlow()
     }.build())
     if (outputClass != null) {
         builder.addType(outputClass)
     }
-
-    builder.addFunction(FunSpec.builder("setFailed").apply {
-        addAnnotation(AnnotationSpec.builder(ClassName("kotlin.js", "JsModule")).apply {
-            addMember("%S", "@actions/core")
-        }.build())
-        addKdoc("https://github.com/JetBrains/kotlin-wrappers/issues/2298")
-        addModifiers(KModifier.EXTERNAL)
-        addParameter("error", ClassName("kotlin", "Throwable"))
-    }.build())
 
     return builder.build()
 }
