@@ -16,6 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.flow
 import web.http.BodyInit
 import web.http.RequestInit
+import web.http.RequestMethod
 import web.http.fetch
 import web.streams.ReadableStreamReadDoneResult
 import web.streams.ReadableStreamReadValueResult
@@ -93,7 +94,16 @@ internal suspend fun HttpRequestData.toRaw(
     }
 
     return RequestInit(
-        method = this@toRaw.method.value,
+        method = when(method.value) {
+            "GET" -> RequestMethod.GET
+            "POST" -> RequestMethod.POST
+            "PUT" -> RequestMethod.PUT
+            "PATCH" -> RequestMethod.PATCH
+            "DELETE" -> RequestMethod.DELETE
+            "HEAD" -> RequestMethod.HEAD
+            "OPTIONS" -> RequestMethod.OPTIONS
+            else -> error("Unsupported HTTP method $method")
+        },
         headers = jsHeaders,
         redirect = if (clientConfig.followRedirects) {
             web.http.RequestRedirect.follow
