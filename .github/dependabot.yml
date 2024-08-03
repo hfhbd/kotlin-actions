@@ -7,7 +7,9 @@ updates:
     assignees:
       - "hfhbd"
   - package-ecosystem: "gradle"
-    directory: "/"
+    directories:
+      - "/"
+      - "integration-test"
     schedule:
       interval: "daily"
     assignees:
