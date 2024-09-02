@@ -19,3 +19,9 @@ plugins {
     id("app.softwork.kotlin.actions") version "LATEST"
 }
 ````
+
+## Development
+```sh
+./gradlew clean kotlinUpgradePackageLock build
+./gradlew clean kotlinUpgradePackageLock copyActionpostDist copyActionmainDist build -pintegration-test 
+```
