@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm")
-    id("friendPath")
     id("publish")
 }
 
@@ -11,7 +10,6 @@ kotlin {
 
 dependencies {
     implementation(projects.actionJson)
-    friendPath(projects.actionJson)
     implementation(libs.kotlinpoet)
 
     testImplementation(kotlin("test"))

@@ -22,13 +22,13 @@ kotlin {
     }
 
     sourceSets {
-        named("jsMain") {
+        jsMain {
             dependencies {
                 api(libs.ktor.client.js)
-                api("org.jetbrains.kotlin-wrappers:kotlin-node:20.14.10-pre.800")
+                api(libs.kotlin.wrappers.node)
             }
         }
-        named("jsTest") {
+        jsTest {
             kotlin.srcDir(writeToken)
             dependencies {
                 implementation(kotlin("test"))
