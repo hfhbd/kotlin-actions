@@ -17,14 +17,13 @@ kotlin {
     }
 
     sourceSets {
-        named("jsMain") {
+        jsMain {
             dependencies {
                 api(libs.coroutines.core)
-                api(npm("@actions/github", "6.0.0"))
-                api("org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit:1.0.0-pre.800")
+                api(libs.kotlin.wrappers.actions.toolkit)
             }
         }
-        named("jsTest") {
+        jsTest {
             dependencies {
                 implementation(kotlin("test"))
             }
