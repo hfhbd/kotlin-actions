@@ -14,7 +14,7 @@ ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
-kotlin-wrappers-node = { module = "org.jetbrains.kotlin-wrappers:kotlin-node", version = "22.5.4-pre.805" }
+kotlin-wrappers-node = { module = "org.jetbrains.kotlin-wrappers:kotlin-node", version = "22.5.4-pre.808" }
 kotlin-wrappers-actions-toolkit = { module = "org.jetbrains.kotlin-wrappers:kotlin-actions-toolkit", version = "1.0.0-pre.805" }
 
 [plugins]
