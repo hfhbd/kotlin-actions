@@ -20,7 +20,7 @@ kotlin {
         jsMain {
             dependencies {
                 api(libs.coroutines.core)
-                api(libs.kotlin.wrappers.actions.toolkit)
+                api(kotlinWrappers.actions.toolkit)
             }
         }
         jsTest {
