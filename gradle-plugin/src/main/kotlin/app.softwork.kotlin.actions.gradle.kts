@@ -134,4 +134,5 @@ kotlin {
 rootProject.extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension> {
     // https://youtrack.jetbrains.com/issue/KT-65639
     version = actionFile.map { it.runs.using.version }.get()
+    versions.webpack.version = "5.94.0"
 }

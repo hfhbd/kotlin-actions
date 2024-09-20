@@ -22,6 +22,6 @@ plugins {
 
 ## Development
 ```sh
-./gradlew clean kotlinUpgradePackageLock build
-./gradlew clean kotlinUpgradePackageLock copyActionpostDist copyActionmainDist build -pintegration-test 
+rm kotlin-js-store/package-lock.json && ./gradlew clean kotlinUpgradePackageLock build
+rm integration-test/kotlin-js-store/package-lock.json && ./gradlew clean kotlinUpgradePackageLock copyActionpostDist copyActionmainDist build -pintegration-test 
 ```

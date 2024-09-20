@@ -12,6 +12,14 @@ plugins {
     id("com.gradle.develocity") version "3.18.1"
 }
 
+dependencyResolutionManagement {
+    versionCatalogs {
+        register("kotlinWrappers") {
+            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:0.0.1-pre.810")
+        }
+    }
+}
+
 develocity {
     buildScan {
         termsOfUseUrl.set("https://gradle.com/terms-of-service")

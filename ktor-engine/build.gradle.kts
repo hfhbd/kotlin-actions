@@ -25,7 +25,7 @@ kotlin {
         jsMain {
             dependencies {
                 api(libs.ktor.client.js)
-                api(libs.kotlin.wrappers.node)
+                api(kotlinWrappers.node)
             }
         }
         jsTest {
