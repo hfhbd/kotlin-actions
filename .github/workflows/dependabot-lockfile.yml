@@ -3,9 +3,8 @@ name: Update Lockfile for Dependabot
 on:
   push:
     branches:
-      - !main
-      - '**'  # Listen for pushes on any branch
-
+      - '**'
+      - '!main'
 jobs:
   run-bash-script:
     runs-on: ubuntu-latest
