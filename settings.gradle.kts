@@ -15,7 +15,7 @@ plugins {
 dependencyResolutionManagement {
     versionCatalogs {
         register("kotlinWrappers") {
-            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:0.0.1-pre.810")
+            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:0.0.1-pre.811")
         }
     }
 }
