@@ -1,0 +1,31 @@
+name: Update Lockfile for Dependabot
+
+on:
+  push:
+    branches:
+      - !main
+      - '**'  # Listen for pushes on any branch
+
+jobs:
+  run-bash-script:
+    runs-on: ubuntu-latest
+    if: startsWith(github.actor, 'dependabot[bot]')
+    steps:
+      - name: Checkout the current branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Update lock file
+        run:  ./gradlew updateKotlinLockfile
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "Automated changes by GitHub Action" || echo "No changes to commit"
+          git push origin ${{ github.ref }}
