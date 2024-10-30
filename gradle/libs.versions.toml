@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.0-Beta1"
 coroutines = "1.9.0"
-ktor = "2.3.12"
+ktor = "3.0.1"
 
 [libraries]
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.3" }
