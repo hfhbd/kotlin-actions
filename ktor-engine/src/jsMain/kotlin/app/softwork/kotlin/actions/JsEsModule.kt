@@ -8,12 +8,12 @@ import io.ktor.http.content.*
 import io.ktor.util.*
 import io.ktor.util.date.*
 import io.ktor.utils.io.*
-import io.ktor.utils.io.core.*
 import js.typedarrays.asInt8Array
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.flow
+import kotlinx.io.readByteArray
 import web.http.BodyInit
 import web.http.RequestInit
 import web.http.RequestMethod
@@ -83,11 +83,11 @@ internal suspend fun HttpRequestData.toRaw(
 
     val bodyBytes = when (val content = body) {
         is OutgoingContent.ByteArrayContent -> content.bytes().asInt8Array()
-        is OutgoingContent.ReadChannelContent -> content.readFrom().readRemaining().readBytes().asInt8Array()
+        is OutgoingContent.ReadChannelContent -> content.readFrom().readRemaining().readByteArray().asInt8Array()
         is OutgoingContent.WriteChannelContent -> {
             GlobalScope.writer(callContext) {
                 content.writeTo(channel)
-            }.channel.readRemaining().readBytes().asInt8Array()
+            }.channel.readRemaining().readByteArray().asInt8Array()
         }
 
         else -> null
