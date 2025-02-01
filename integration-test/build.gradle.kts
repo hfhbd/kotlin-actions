@@ -8,14 +8,14 @@ val writeToken by tasks.registering(GetTokenTask::class) {
 }
 
 kotlin.sourceSets {
-    mainMain {
+    jsMain {
         dependencies {
             implementation("app.softwork.kotlin.actions:ktor-engine")
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
         }
     }
-    mainTest {
+    jsTest {
         kotlin.srcDir(writeToken)
         dependencies {
             implementation(kotlin("test"))
