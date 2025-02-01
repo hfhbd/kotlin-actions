@@ -79,6 +79,9 @@ kotlin {
                     val bug = name.replaceFirstChar { it.uppercaseChar() }
                     tasks.named("js${bug}${bug}ProductionExecutableCompileSync", DefaultIncrementalSyncTask::class)
                 }
+
+                val fullName = outputModuleName
+
                 executable.configure {
                     dependsOn(customWebpackConfig, sync)
                     mode = KotlinWebpackConfig.Mode.PRODUCTION
@@ -93,9 +96,6 @@ kotlin {
                     webpackConfigApplier {
                         configDirectory = configDir.get()
                     }
-                }
-                customWebpackConfig {
-                    entry.set(executable.flatMap { it.entry })
                 }
                 tasks.register("copyAction${name}Dist", Copy::class) {
                     from(executable.flatMap { it.outputDirectory.file(fileName) })

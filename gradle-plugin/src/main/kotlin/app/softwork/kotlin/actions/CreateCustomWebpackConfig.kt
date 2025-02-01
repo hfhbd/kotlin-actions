@@ -12,10 +12,6 @@ abstract class CreateCustomWebpackConfig : DefaultTask() {
     @get:Input
     abstract val nodeVersion: Property<String>
 
-    @get:InputFile
-    @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val entry: RegularFileProperty
-
     @get:OutputDirectory
     abstract val outputDir: DirectoryProperty
 
@@ -26,16 +22,6 @@ abstract class CreateCustomWebpackConfig : DefaultTask() {
     @TaskAction
     fun write() {
         val file = File(outputDir.asFile.get(), "webpack.kotlin.actions.node.js")
-        val unused = """
-            import path from "path";
-            import { fileURLToPath } from "url";
-
-            const __dirname = path.dirname(fileURLToPath(import.meta.url));    
-                
-            config.entry = {
-              main: [path.resolve(__dirname, "${entry.asFile.get().toRelativeString(entry.asFile.get().parentFile.parentFile)}")]
-            };
-        """.trimIndent()
 
         file.writeText(
             """ 
