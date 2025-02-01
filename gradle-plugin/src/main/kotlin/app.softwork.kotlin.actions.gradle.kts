@@ -54,8 +54,6 @@ kotlin {
             val dir = layout.projectDirectory.dir(file.map { it.dropLastWhile { it != '/' } })
             val fileName = file.map { it.takeLastWhile { it != '/' } }
 
-            val fullName = project.path.replace(':', '-') + '-' + name
-
             val compilation = if (name == "main") {
                 this.compilations.named("main")
             } else {
