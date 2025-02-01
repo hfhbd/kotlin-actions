@@ -1,10 +1,10 @@
 [versions]
-kotlin = "2.1.0-Beta1"
-coroutines = "1.9.0"
-ktor = "2.3.12"
+kotlin = "2.1.20-Beta2"
+coroutines = "1.10.1"
+ktor = "3.0.3"
 
 [libraries]
-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.3" }
+serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.8.0" }
 kotlinpoet = { module = "com.squareup:kotlinpoet", version = "2.0.0" }
 
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -18,4 +18,4 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-plugin-js-plain-objects = { id = "org.jetbrains.kotlin.plugin.js-plain-objects", version.ref = "kotlin" }
-publish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
+mavencentral = { id = "io.github.hfhbd.mavencentral", version = "0.0.17" }
