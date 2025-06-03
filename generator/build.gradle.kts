@@ -11,8 +11,10 @@ kotlin {
 dependencies {
     implementation(projects.actionJson)
     implementation(libs.kotlinpoet)
+}
 
-    testImplementation(kotlin("test"))
+testing.suites.withType(JvmTestSuite::class).configureEach {
+    useKotlinTest()
 }
 
 publishing {

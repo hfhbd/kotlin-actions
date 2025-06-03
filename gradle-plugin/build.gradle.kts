@@ -8,10 +8,13 @@ kotlin.jvmToolchain(8)
 dependencies {
     implementation(projects.actionJson)
     compileOnly(projects.generator)
+
     implementation(libs.plugins.kotlin.multiplatform.toDep())
     implementation(libs.plugins.kotlin.plugin.js.plain.objects.toDep())
+}
 
-    testImplementation(kotlin("test"))
+testing.suites.withType(JvmTestSuite::class).configureEach {
+    useKotlinTest()
 }
 
 fun Provider<PluginDependency>.toDep() = map {

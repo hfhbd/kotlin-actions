@@ -94,14 +94,14 @@ internal suspend fun HttpRequestData.toRaw(
     }
 
     return RequestInit(
-        method = when(method.value) {
-            "GET" -> RequestMethod.GET
-            "POST" -> RequestMethod.POST
-            "PUT" -> RequestMethod.PUT
-            "PATCH" -> RequestMethod.PATCH
-            "DELETE" -> RequestMethod.DELETE
-            "HEAD" -> RequestMethod.HEAD
-            "OPTIONS" -> RequestMethod.OPTIONS
+        method = when(method) {
+            HttpMethod.Get -> RequestMethod.GET
+            HttpMethod.Post -> RequestMethod.POST
+            HttpMethod.Put -> RequestMethod.PUT
+            HttpMethod.Patch -> RequestMethod.PATCH
+            HttpMethod.Delete -> RequestMethod.DELETE
+            HttpMethod.Head -> RequestMethod.HEAD
+            HttpMethod.Options -> RequestMethod.OPTIONS
             else -> error("Unsupported HTTP method $method")
         },
         headers = jsHeaders,
