@@ -28,6 +28,9 @@ jobs:
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Copy to integrationTest
+        run: cp gradle/gradle-daemon-jvm.properties integration-test/gradle/gradle-daemon-jvm.properties
+
       - name: Create branch, commit, and push changes
         if: steps.check_diff.outputs.changed == 'true'
         run: |
@@ -36,6 +39,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b $BRANCH
           git add gradle/gradle-daemon-jvm.properties
+          git add integration-test/gradle/gradle-daemon-jvm.properties
           git commit -m "Update gradle-daemon-jvm.properties [Automated]"
           git push origin $BRANCH
 
