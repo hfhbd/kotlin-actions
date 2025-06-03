@@ -1,0 +1,56 @@
+name: Weekly Update Gradle Daemon JVM
+
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Every Monday at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-daemon-jvm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Run updateDaemonJvm task
+        run: ./gradlew :updateDaemonJvm
+
+      - name: Check for changes
+        id: check_diff
+        run: |
+          if git diff --quiet gradle/gradle-daemon-jvm.properties; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Copy to integrationTest
+        run: cp gradle/gradle-daemon-jvm.properties integration-test/gradle/gradle-daemon-jvm.properties
+
+      - name: Create branch, commit, and push changes
+        if: steps.check_diff.outputs.changed == 'true'
+        run: |
+          BRANCH=update-daemon-jvm-$(date +%Y%m%d)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b $BRANCH
+          git add gradle/gradle-daemon-jvm.properties
+          git add integration-test/gradle/gradle-daemon-jvm.properties
+          git commit -m "Update gradle-daemon-jvm.properties [Automated]"
+          git push origin $BRANCH
+
+      - name: Create pull request
+        if: steps.check_diff.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH=update-daemon-jvm-$(date +%Y%m%d)
+          gh pr create \
+            --title "Update gradle-daemon-jvm.properties [Automated]" \
+            --body "This PR updates gradle-daemon-jvm.properties via the scheduled workflow." \
+            --head $BRANCH \
+            --base ${{ github.ref_name }}

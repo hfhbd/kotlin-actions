@@ -8,10 +8,13 @@ kotlin.jvmToolchain(8)
 dependencies {
     implementation(projects.actionJson)
     compileOnly(projects.generator)
+
     implementation(libs.plugins.kotlin.multiplatform.toDep())
     implementation(libs.plugins.kotlin.plugin.js.plain.objects.toDep())
+}
 
-    testImplementation(kotlin("test"))
+testing.suites.withType(JvmTestSuite::class).configureEach {
+    useKotlinTest()
 }
 
 fun Provider<PluginDependency>.toDep() = map {
@@ -33,14 +36,12 @@ gradlePlugin.plugins.configureEach {
     description = "Gradle plugin to generate Kotlin entrypoints for GitHub actions.yml"
 }
 
-configurations.configureEach {
-    if (isCanBeConsumed) {
-        attributes {
-            attribute(
-                GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
-                objects.named(GradleVersion.version("8.7").version)
-            )
-        }
+configurations.apiElements {
+    attributes {
+        attribute(
+            GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
+            objects.named(GradleVersion.version("8.7").version)
+        )
     }
 }
 
