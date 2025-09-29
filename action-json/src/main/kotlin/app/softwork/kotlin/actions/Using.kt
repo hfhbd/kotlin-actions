@@ -13,5 +13,8 @@ public enum class Using(public val version: String) {
     Node16("16.20.2"),
 
     @SerialName("node20")
-    Node20("20.19.1"),
+    Node20("20.19.4"),
+
+    @SerialName("node24")
+    Node24("24.5.0"),
 }
