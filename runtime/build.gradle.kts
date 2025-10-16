@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.*
-
 plugins {
     kotlin("multiplatform")
     id("publish")
@@ -12,8 +10,6 @@ kotlin {
 
         compilerOptions {
             target.set("es2015")
-            moduleKind.set(JsModuleKind.MODULE_ES)
-            useEsClasses.set(true)
         }
     }
 

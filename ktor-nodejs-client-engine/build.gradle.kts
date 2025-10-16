@@ -16,8 +16,7 @@ kotlin {
         useEsModules()
 
         compilerOptions {
-            moduleKind.set(JsModuleKind.MODULE_ES)
-            useEsClasses.set(true)
+            target.set("es2015")
         }
     }
 

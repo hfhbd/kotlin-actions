@@ -8,8 +8,6 @@ pluginManagement {
 
 plugins {
     id("myRepos")
-    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    id("com.gradle.develocity") version "4.2"
 }
 
 dependencyResolutionManagement {
@@ -17,18 +15,6 @@ dependencyResolutionManagement {
         register("kotlinWrappers") {
             from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:1.0.0-pre.860")
         }
-    }
-}
-
-develocity {
-    buildScan {
-        termsOfUseUrl.set("https://gradle.com/terms-of-service")
-        termsOfUseAgree.set("yes")
-        val isCI = providers.environmentVariable("CI").isPresent
-        publishing {
-            onlyIf { isCI }
-        }
-        tag("CI")
     }
 }
 
@@ -41,4 +27,4 @@ include(":action-json")
 include(":generator")
 include(":gradle-plugin")
 include(":runtime")
-include(":ktor-engine")
+include(":ktor-nodejs-client-engine")

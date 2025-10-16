@@ -10,7 +10,7 @@ val writeToken by tasks.registering(GetTokenTask::class) {
 kotlin.sourceSets {
     jsMain {
         dependencies {
-            implementation("app.softwork.kotlin.actions:ktor-engine")
+            implementation("app.softwork.kotlin.actions:ktor-nodejs-client-engine")
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
         }

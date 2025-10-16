@@ -7,6 +7,7 @@ dependencies {
     implementation(libs.plugins.kotlin.plugin.serialization.toDep())
     implementation(libs.plugins.kotlin.plugin.js.plain.objects.toDep())
     implementation(libs.plugins.mavencentral.toDep())
+    implementation(libs.plugins.foojay.toDep())
 }
 
 fun Provider<PluginDependency>.toDep() = map {

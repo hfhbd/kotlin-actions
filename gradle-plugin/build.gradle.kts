@@ -3,7 +3,7 @@ plugins {
     id("publish")
 }
 
-kotlin.jvmToolchain(8)
+kotlin.jvmToolchain(17)
 
 dependencies {
     implementation(projects.actionJson)
@@ -38,10 +38,7 @@ gradlePlugin.plugins.configureEach {
 
 configurations.apiElements {
     attributes {
-        attribute(
-            GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE,
-            objects.named(GradleVersion.version("8.7").version)
-        )
+        attribute(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, objects.named("9.0"))
     }
 }
 
