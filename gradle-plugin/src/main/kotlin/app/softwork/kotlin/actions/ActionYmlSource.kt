@@ -11,6 +11,6 @@ abstract class ActionYmlSource : ValueSource<ActionYml, ActionYmlSource.Paramete
     override fun obtain(): ActionYml {
         val text = parameters.actionFile.asFile.get().readText()
 
-        return json.decodeFromString<ActionYml>(text.replace(replaceActionExpressions, "\"\""))
+        return json.decodeFromString(ActionYml.serializer(), text.replace(replaceActionExpressions, "\"\""))
     }
 }

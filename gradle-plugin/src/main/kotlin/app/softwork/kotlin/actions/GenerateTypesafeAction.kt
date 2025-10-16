@@ -28,7 +28,7 @@ abstract class GenerateTypesafeAction : DefaultTask() {
     internal abstract val workerExecutor: WorkerExecutor
 
     @TaskAction
-    fun generate() {
+    protected fun generate() {
         workerExecutor.classLoaderIsolation {
             this.classpath.from(workerClasspath)
         }.submit(WorkerAction::class.java) {
@@ -37,7 +37,7 @@ abstract class GenerateTypesafeAction : DefaultTask() {
         }
     }
 
-    abstract class WorkerAction: WorkAction<WorkerAction.Gen> {
+    internal abstract class WorkerAction: WorkAction<WorkerAction.Gen> {
         interface Gen: WorkParameters {
             val actionFile: RegularFileProperty
             val outputDirectory: DirectoryProperty
