@@ -22,7 +22,7 @@ import web.streams.ReadableStreamReadDoneResult
 import web.streams.ReadableStreamReadValueResult
 import kotlin.coroutines.CoroutineContext
 
-object JsEsModule : HttpClientEngineFactory<HttpClientEngineConfig> {
+data object JsEsModule : HttpClientEngineFactory<HttpClientEngineConfig> {
     override fun create(block: HttpClientEngineConfig.() -> Unit): HttpClientEngine =
         JsEsModuleEngine(HttpClientEngineConfig().apply(block))
 }
