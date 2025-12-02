@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.*
-
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
