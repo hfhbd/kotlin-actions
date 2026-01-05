@@ -1,3 +1,6 @@
+import dev.sigstore.sign.tasks.SigstoreSignFilesTask
+import org.gradle.kotlin.dsl.support.serviceOf
+
 plugins {
     id("maven-publish")
     id("signing")
@@ -33,15 +36,21 @@ publishing {
 }
 
 signing {
-    val signingKey = providers.gradleProperty("signingKey")
-    if (signingKey.isPresent) {
-        useInMemoryPgpKeys(signingKey.get(), providers.gradleProperty("signingPassword").get())
-        sign(publishing.publications)
-    }
+    useInMemoryPgpKeys(
+        providers.gradleProperty("signingKey").orNull,
+        providers.gradleProperty("signingPassword").orNull,
+    )
+    isRequired = providers.gradleProperty("signingKey").isPresent
+    sign(publishing.publications)
 }
 
 // https://youtrack.jetbrains.com/issue/KT-46466
 val signingTasks = tasks.withType<Sign>()
 tasks.withType<AbstractPublishToMaven>().configureEach {
     dependsOn(signingTasks)
+}
+
+// https://github.com/sigstore/sigstore-java/issues/1146
+tasks.withType<SigstoreSignFilesTask>().configureEach {
+    launcher.set(serviceOf<JavaToolchainService>().launcherFor { })
 }

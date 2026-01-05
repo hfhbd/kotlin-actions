@@ -8,6 +8,7 @@ dependencies {
     implementation(libs.plugins.kotlin.plugin.js.plain.objects.toDep())
     implementation(libs.plugins.mavencentral.toDep())
     implementation(libs.plugins.foojay.toDep())
+    implementation(libs.plugins.sigstore.toDep())
 }
 
 fun Provider<PluginDependency>.toDep() = map {

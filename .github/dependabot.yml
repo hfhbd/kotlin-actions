@@ -4,13 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    assignees:
-      - "hfhbd"
   - package-ecosystem: "gradle"
     directories:
       - "/"
       - "integration-test"
     schedule:
       interval: "daily"
-    assignees:
-      - "hfhbd"
