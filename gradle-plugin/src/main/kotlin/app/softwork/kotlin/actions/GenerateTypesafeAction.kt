@@ -3,6 +3,7 @@ package app.softwork.kotlin.actions
 import org.gradle.api.*
 import org.gradle.api.file.*
 import org.gradle.api.tasks.*
+import org.gradle.kotlin.dsl.submit
 import org.gradle.workers.*
 import javax.inject.*
 
@@ -15,11 +16,6 @@ abstract class GenerateTypesafeAction : DefaultTask() {
     @get:OutputDirectory
     abstract val outputDirectory: DirectoryProperty
 
-    init {
-        actionFile.convention(project.layout.projectDirectory.file("action.yml"))
-        outputDirectory.convention(project.layout.buildDirectory.dir("actions/generated"))
-    }
-
     @get:InputFiles
     @get:Classpath
     internal abstract val workerClasspath: ConfigurableFileCollection
@@ -31,7 +27,7 @@ abstract class GenerateTypesafeAction : DefaultTask() {
     protected fun generate() {
         workerExecutor.classLoaderIsolation {
             this.classpath.from(workerClasspath)
-        }.submit(WorkerAction::class.java) {
+        }.submit(WorkerAction::class) {
             this.actionFile.set(this@GenerateTypesafeAction.actionFile)
             this.outputDirectory.set(this@GenerateTypesafeAction.outputDirectory)
         }

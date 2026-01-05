@@ -1,29 +1,14 @@
 import app.softwork.kotlin.actions.*
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.*
-import org.jetbrains.kotlin.gradle.targets.js.NpmVersions
 import org.jetbrains.kotlin.gradle.targets.js.ir.*
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.Companion.kotlinNodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 import org.jetbrains.kotlin.gradle.targets.js.webpack.*
-import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsRootExtension
 
 plugins {
     kotlin("multiplatform")
-}
-
-val workerActionDeps = configurations.dependencyScope("kotlinActions")
-
-dependencies {
-    workerActionDeps("app.softwork.kotlin.actions:generator:$VERSION")
-}
-
-val kotlinActionsWorkerClasspath = configurations.resolvable("kotlinActionsWorkerClasspath") {
-    extendsFrom(workerActionDeps.get())
-}
-
-val generateTypesafeAction by tasks.registering(GenerateTypesafeAction::class) {
-    this.workerClasspath.from(kotlinActionsWorkerClasspath)
+    id("app.softwork.kotlin.actions.typed")
 }
 
 val actionFile = providers.of(ActionYmlSource::class) {
@@ -131,7 +116,7 @@ kotlin {
 
                 defaultSourceSet {
                     if (name == "main") {
-                        kotlin.srcDirs(generateTypesafeAction)
+                        kotlin.srcDirs(tasks.named("generateTypesafeAction"))
                     } else {
                         dependsOn(this@kotlin.sourceSets.getByName("commonMain"))
                     }
@@ -157,6 +142,5 @@ kotlin {
 }
 
 extensions.configure<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec> {
-    // https://youtrack.jetbrains.com/issue/KT-65639
-    version = actionFile.map { it.runs.using.version }.get()
+    version.set(actionFile.map { it.runs.using.version })
 }
