@@ -1,9 +1,12 @@
 import app.softwork.kotlin.actions.*
 import org.gradle.api.tasks.TaskProvider
 import org.jetbrains.kotlin.gradle.dsl.*
-import org.jetbrains.kotlin.gradle.targets.js.dsl.KotlinJsTargetDsl
+import org.jetbrains.kotlin.gradle.targets.js.NpmVersions
 import org.jetbrains.kotlin.gradle.targets.js.ir.*
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin.Companion.kotlinNodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.npm.npmProject
 import org.jetbrains.kotlin.gradle.targets.js.webpack.*
+import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsRootExtension
 
 plugins {
     kotlin("multiplatform")
@@ -67,6 +70,7 @@ kotlin {
             }
             binaries.executable(compilation.get())
             compilation {
+                val compilation = this
                 val executable = tasks.register(
                     "${name}Executable",
                     KotlinWebpack::class,
@@ -93,6 +97,14 @@ kotlin {
                     mainOutputFileName.set(fileName)
                     sourceMaps = false
                     val configDir = customWebpackConfig.flatMap { it.outputDir.asFile }
+                    @Suppress("INVISIBLE_REFERENCE")
+                    getIsWasm.set(false)
+                    @Suppress("INVISIBLE_REFERENCE")
+                    this.versions.set(NpmVersions())
+                    val npmToolingDir = project.objects.directoryProperty().fileProvider(compilation.npmProject.dir.map { it.asFile })
+
+                    @Suppress("INVISIBLE_REFERENCE")
+                    this.npmToolingEnvDir.set(npmToolingDir)
                     webpackConfigApplier {
                         configDirectory = configDir.get()
                     }
