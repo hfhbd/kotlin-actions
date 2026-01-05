@@ -4,7 +4,7 @@ import app.softwork.kotlin.actions.VERSION
 val workerActionDeps = configurations.dependencyScope("kotlinActions")
 
 dependencies {
-    workerActionDeps("app.softwork.kotlin.actions", "generator", VERSION)
+    workerActionDeps("app.softwork.kotlin.actions:generator:$VERSION")
 }
 
 val kotlinActionsWorkerClasspath = configurations.resolvable("kotlinActionsWorkerClasspath") {
