@@ -36,9 +36,9 @@ gradlePlugin.plugins.configureEach {
     description = "Gradle plugin to generate Kotlin entrypoints for GitHub actions.yml"
 }
 
-configurations.apiElements {
+configurations.runtimeElements {
     attributes {
-        attribute(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, objects.named("9.0"))
+        attribute(GradlePluginApiVersion.GRADLE_PLUGIN_API_VERSION_ATTRIBUTE, named("9.0"))
     }
 }
 
