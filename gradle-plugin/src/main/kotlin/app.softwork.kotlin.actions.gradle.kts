@@ -100,7 +100,7 @@ kotlin {
                     @Suppress("INVISIBLE_REFERENCE")
                     getIsWasm.set(false)
                     @Suppress("INVISIBLE_REFERENCE")
-                    this.versions.set(NpmVersions())
+                    this.versions.set(rootProject.kotlinNodeJsRootExtension.versions)
                     val npmToolingDir = project.objects.directoryProperty().fileProvider(compilation.npmProject.dir.map { it.asFile })
 
                     @Suppress("INVISIBLE_REFERENCE")
