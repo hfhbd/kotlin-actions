@@ -9,17 +9,27 @@ import io.ktor.util.*
 import io.ktor.util.date.*
 import io.ktor.utils.io.*
 import js.typedarrays.asInt8Array
+import js.typedarrays.toByteArray
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.io.readByteArray
 import web.http.BodyInit
+import web.http.DELETE
+import web.http.GET
+import web.http.HEAD
+import web.http.OPTIONS
+import web.http.PATCH
+import web.http.POST
+import web.http.PUT
 import web.http.RequestInit
 import web.http.RequestMethod
 import web.http.fetch
-import web.streams.ReadableStreamReadDoneResult
-import web.streams.ReadableStreamReadValueResult
+import web.http.follow
+import web.http.manual
+import web.streams.cancel
+import web.streams.read
 import kotlin.coroutines.CoroutineContext
 
 data object JsEsModule : HttpClientEngineFactory<HttpClientEngineConfig> {
@@ -30,14 +40,14 @@ data object JsEsModule : HttpClientEngineFactory<HttpClientEngineConfig> {
 private val CLIENT_CONFIG = AttributeKey<HttpClientConfig<*>>("client-config")
 
 private class JsEsModuleEngine(
-    override val config: HttpClientEngineConfig
+    override val config: HttpClientEngineConfig,
 ) : HttpClientEngineBase("ktor-js") {
 
     init {
         check(config.proxy == null) { "Proxy unsupported in Js engine." }
     }
 
-    @OptIn(InternalAPI::class)
+    @OptIn(InternalAPI::class, ExperimentalWasmJsInterop::class)
     override suspend fun execute(data: HttpRequestData): HttpResponseData {
         val callContext = callContext()
         val clientConfig = data.attributes[CLIENT_CONFIG]
@@ -52,7 +62,7 @@ private class JsEsModuleEngine(
 
         val status = HttpStatusCode(rawResponse.status.toInt(), rawResponse.statusText)
         val headers = Headers.build {
-            for ((key, value) in rawResponse.headers) {
+            rawResponse.headers.forEach { value, key ->
                 append(key, value)
             }
         }
@@ -74,11 +84,11 @@ private class JsEsModuleEngine(
 @OptIn(InternalAPI::class, DelicateCoroutinesApi::class)
 internal suspend fun HttpRequestData.toRaw(
     clientConfig: HttpClientConfig<*>,
-    callContext: CoroutineContext
+    callContext: CoroutineContext,
 ): RequestInit {
     val jsHeaders = web.http.Headers()
     mergeHeaders(this@toRaw.headers, this@toRaw.body) { key, value ->
-        jsHeaders[key] = value
+        jsHeaders.set(key, value)
     }
 
     val bodyBytes = when (val content = body) {
@@ -94,7 +104,7 @@ internal suspend fun HttpRequestData.toRaw(
     }
 
     return RequestInit(
-        method = when(method) {
+        method = when (method) {
             HttpMethod.Get -> RequestMethod.GET
             HttpMethod.Post -> RequestMethod.POST
             HttpMethod.Put -> RequestMethod.PUT
@@ -120,17 +130,15 @@ internal fun readBodyNode(scope: CoroutineScope, response: web.http.Response): B
         val reader = body.getReader()
         try {
             while (true) {
-                when (val result = reader.read()) {
-                    is ReadableStreamReadDoneResult -> {
-                        val lastValue = result.value
-                        if (lastValue != null) {
-                            emit(lastValue)
-                        }
-                        break
-                    }
-
-                    is ReadableStreamReadValueResult -> emit(result.value)
+                val result = reader.read()
+                val value = result.value
+                if (value != null) {
+                    emit(value)
                 }
+                if (result.done) {
+                    break
+                }
+
             }
         } finally {
             reader.cancel()
