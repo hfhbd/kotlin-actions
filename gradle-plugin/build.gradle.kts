@@ -44,6 +44,11 @@ configurations.configureEach {
     }
 }
 
+val javaComponent = components["java"] as AdhocComponentWithVariants
+javaComponent.withVariantsFromConfiguration(configurations.getByName("archives")) {
+    skip()
+}
+
 java {
     withJavadocJar()
     withSourcesJar()
