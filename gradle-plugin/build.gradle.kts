@@ -44,9 +44,11 @@ configurations.configureEach {
     }
 }
 
-val javaComponent = components["java"] as AdhocComponentWithVariants
-javaComponent.withVariantsFromConfiguration(configurations.getByName("archives")) {
-    skip()
+// https://docs.gradle.org/current/userguide/upgrading_version_9.html#archives-configuration
+configurations.archives {
+    attributes {
+        attribute(Attribute.of("deprecated", String::class.java), "true")
+    }
 }
 
 java {
