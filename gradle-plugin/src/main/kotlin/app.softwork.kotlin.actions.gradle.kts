@@ -72,6 +72,7 @@ kotlin {
                 val fullName = outputModuleName
 
                 executable.configure {
+                    dependsOn(tasks.named("kotlinNodeJsSetup"))
                     dependsOn(customWebpackConfig, sync)
                     mode = KotlinWebpackConfig.Mode.PRODUCTION
                     inputFilesDirectory.set(layout.dir(sync.flatMap { it.destinationDirectory }))
