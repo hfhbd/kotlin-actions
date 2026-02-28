@@ -5,5 +5,6 @@ plugins {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        maven(url = "https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
     }
 }
