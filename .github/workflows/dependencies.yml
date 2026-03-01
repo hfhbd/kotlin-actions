@@ -23,7 +23,7 @@ jobs:
     needs: dependency-submission
     if: github.event_name == 'pull_request'
 
-    permissions: {}
+    permissions: { }
 
     steps:
       - name: Perform dependency review

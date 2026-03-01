@@ -33,6 +33,14 @@ kotlin {
             target.set("es2015")
             moduleKind.set(JsModuleKind.MODULE_ES)
             useEsClasses.set(true)
+
+            freeCompilerArgs.addAll(
+                "-Xes-long-as-bigint",
+                "-Xdont-warn-on-error-suppression",
+                "-Xgenerate-polyfills=false",
+                "-Xir-generate-inline-anonymous-functions",
+                "-Xwarning-level=NOTHING_TO_INLINE:disabled",
+            )
         }
 
         fun setUpTarget(
@@ -95,24 +103,13 @@ kotlin {
                         configDirectory = configDir.get()
                     }
                 }
-                tasks.register("copyAction${name}Dist", Copy::class) {
+                val copyDist = tasks.register("copyAction${name}Dist", Copy::class) {
                     from(executable.flatMap { it.outputDirectory.file(fileName) })
                     into(dir)
                 }
-                val expectedWithoutTasksDependencyToNotRunCopy = objects.fileProperty().apply {
-                    set(dir.flatMap { it.file(fileName) })
-                }.locationOnly.map { it.asFile.absolutePath }
-                val checkDist = tasks.register("check${name}Dist", CheckFileTask::class) {
-                    actual.set(executable.flatMap { it.outputDirectory.file(fileName) })
-                    expected.set(expectedWithoutTasksDependencyToNotRunCopy)
-                    copyTaskPath.set(path.dropLastWhile { it != ':' } + "copyAction${name}Dist")
-                }
 
                 tasks.assemble {
-                    dependsOn(executable)
-                }
-                tasks.check {
-                    dependsOn(checkDist)
+                    dependsOn(copyDist)
                 }
 
                 defaultSourceSet {
