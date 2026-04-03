@@ -13,7 +13,7 @@ plugins {
 dependencyResolutionManagement {
     versionCatalogs {
         register("kotlinWrappers") {
-            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:2026.3.8")
+            from("org.jetbrains.kotlin-wrappers:kotlin-wrappers-catalog:2026.4.1")
         }
     }
 }
